@@ -38,11 +38,9 @@
   --cor-overlay-escuro: rgba(0, 6, 25, 0.55);
 
   /* ---------- 4. Tipografia ----------
-     Oficial: títulos em "Briller", corpo em "Poppins" (Manual da Marca / stated).
-     Briller não possui arquivo de fonte disponível na pasta do projeto — usamos
-     "Baloo 2" como substituto temporário (mesma família visual: rounded display,
-     bold). Ver nota de fidelidade no README. */
-  --font-display: "Baloo 2", "Poppins", sans-serif;
+     Oficial: títulos em "Briller" (Fonte/Briller/*, self-hosted em
+     src/styles/fonts-briller.css), corpo em "Poppins". */
+  --font-display: "Briller", "Poppins", sans-serif;
   --font-body: "Poppins", -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
 
@@ -51,10 +49,15 @@
   --fs-body-sm: 0.9375rem;
   --fs-body: 1rem;
   --fs-body-lg: 1.0625rem;
-  --fs-display-sm: clamp(1.375rem, 1.05rem + 1.1vw, 1.75rem);
-  --fs-display-md: clamp(1.625rem, 1.1rem + 1.8vw, 2.25rem);
-  --fs-display-lg: clamp(1.875rem, 1.1rem + 2.8vw, 2.75rem);
-  --fs-display-xl: clamp(2.25rem, 1.1rem + 4.2vw, 3.375rem);
+  /* Recalibrados para as métricas reais da Briller (proporção de cap-height
+     bem diferente do placeholder Baloo 2 usado antes de recebermos a fonte
+     oficial). Fator derivado da medição direta da altura de caixa-alta ("T")
+     do headline do Hero no render Figma/Home.png vs. a mesma métrica da
+     Briller renderizada (ver Hero.css para a nota completa). */
+  --fs-display-sm: clamp(0.8125rem, 0.625rem + 0.66vw, 1.0625rem);
+  --fs-display-md: clamp(1rem, 0.66rem + 1.1vw, 1.375rem);
+  --fs-display-lg: clamp(1.125rem, 0.66rem + 1.7vw, 1.6875rem);
+  --fs-display-xl: clamp(1.375rem, 0.66rem + 2.5vw, 2.0625rem);
 
   --lh-tight: 1.08;
   --lh-snug: 1.3;

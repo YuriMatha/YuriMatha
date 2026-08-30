@@ -1,0 +1,73 @@
+/*
+  Fonte "Briller" — arquivos oficiais fornecidos em Fonte/Briller/ (stylesheet.css original).
+  Self-hosted via Vite (woff2 + woff + ttf; .eot omitido, formato legado só usado por IE8-10).
+  Mesmo mapeamento de peso do stylesheet.css oficial, incluindo a duplicidade original de
+  font-weight: 900 entre Briller-Black e Briller-Ultra (o arquivo oficial já vem assim —
+  não alterado aqui). O peso realmente usado no design (títulos) é 700 (Briller-Bold).
+*/
+
+@font-face {
+  font-family: "Briller";
+  src:
+    url("../assets/fonts/briller/Briller.woff2") format("woff2"),
+    url("../assets/fonts/briller/Briller.woff") format("woff"),
+    url("../assets/fonts/briller/Briller.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Briller";
+  src:
+    url("../assets/fonts/briller/Briller-Thin.woff2") format("woff2"),
+    url("../assets/fonts/briller/Briller-Thin.woff") format("woff"),
+    url("../assets/fonts/briller/Briller-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Briller";
+  src:
+    url("../assets/fonts/briller/Briller-Light.woff2") format("woff2"),
+    url("../assets/fonts/briller/Briller-Light.woff") format("woff"),
+    url("../assets/fonts/briller/Briller-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Briller";
+  src:
+    url("../assets/fonts/briller/Briller-Bold.woff2") format("woff2"),
+    url("../assets/fonts/briller/Briller-Bold.woff") format("woff"),
+    url("../assets/fonts/briller/Briller-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Briller";
+  src:
+    url("../assets/fonts/briller/Briller-Black.woff2") format("woff2"),
+    url("../assets/fonts/briller/Briller-Black.woff") format("woff"),
+    url("../assets/fonts/briller/Briller-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Briller";
+  src:
+    url("../assets/fonts/briller/Briller-Ultra.woff2") format("woff2"),
+    url("../assets/fonts/briller/Briller-Ultra.woff") format("woff"),
+    url("../assets/fonts/briller/Briller-Ultra.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}

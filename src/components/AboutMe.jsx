@@ -14,11 +14,17 @@ export default function AboutMe() {
 
   useGSAP(
     () => {
+      // Guard against overlapping/duplicate ScrollTrigger instances fighting over the
+      // same elements (which was leaving hero text stuck invisible in production).
+      gsap.killTweensOf([".about__photo", ".about__eyebrow", ".about__headline", ".about__paragraph"]);
+      const finalize = (targets) => () => gsap.set(targets, { clearProps: "opacity,transform" });
+
       gsap.from(".about__photo", {
         opacity: 0,
         y: 40,
         duration: 0.8,
         ease: "power3.out",
+        onComplete: finalize(".about__photo"),
         scrollTrigger: { trigger: root.current, start: "top 75%" },
       });
       gsap.from(".about__eyebrow, .about__headline, .about__paragraph", {
@@ -27,6 +33,7 @@ export default function AboutMe() {
         duration: 0.7,
         stagger: 0.1,
         ease: "power3.out",
+        onComplete: finalize(".about__eyebrow, .about__headline, .about__paragraph"),
         scrollTrigger: { trigger: root.current, start: "top 70%" },
       });
     },

@@ -25,21 +25,27 @@ export default function Services() {
 
   useGSAP(
     () => {
+      // Guard against overlapping/duplicate ScrollTrigger instances fighting over the
+      // same elements (which was leaving hero text stuck invisible in production).
+      gsap.killTweensOf(".services__intro > *");
       gsap.from(".services__intro > *", {
         opacity: 0,
         y: 20,
         duration: 0.6,
         stagger: 0.08,
         ease: "power3.out",
+        onComplete: () => gsap.set(".services__intro > *", { clearProps: "opacity,transform" }),
         scrollTrigger: { trigger: root.current, start: "top 75%" },
       });
       gsap.utils.toArray(".service-card").forEach((card, i) => {
+        gsap.killTweensOf(card);
         gsap.from(card, {
           opacity: 0,
           y: 28,
           duration: 0.6,
           ease: "power3.out",
           delay: (i % 3) * 0.08,
+          onComplete: () => gsap.set(card, { clearProps: "opacity,transform" }),
           scrollTrigger: { trigger: card, start: "top 88%" },
         });
       });

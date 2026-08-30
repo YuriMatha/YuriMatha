@@ -15,12 +15,16 @@ export default function Contact() {
 
   useGSAP(
     () => {
+      // Guard against overlapping/duplicate ScrollTrigger instances fighting over the
+      // same elements (which was leaving hero text stuck invisible in production).
+      gsap.killTweensOf([".contact__left > *", ".contact__conversion-card"]);
       gsap.from(".contact__left > *", {
         opacity: 0,
         y: 24,
         duration: 0.6,
         stagger: 0.08,
         ease: "power3.out",
+        onComplete: () => gsap.set(".contact__left > *", { clearProps: "opacity,transform" }),
         scrollTrigger: { trigger: root.current, start: "top 75%" },
       });
       gsap.from(".contact__conversion-card", {
@@ -28,6 +32,7 @@ export default function Contact() {
         y: 30,
         duration: 0.7,
         ease: "power3.out",
+        onComplete: () => gsap.set(".contact__conversion-card", { clearProps: "opacity,transform" }),
         scrollTrigger: { trigger: root.current, start: "top 70%" },
       });
     },

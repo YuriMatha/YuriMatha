@@ -27,12 +27,16 @@ export default function ProjectsCarousel() {
 
   useGSAP(
     () => {
+      // Guard against overlapping/duplicate ScrollTrigger instances fighting over the
+      // same elements (which was leaving hero text stuck invisible in production).
+      gsap.killTweensOf([".projects__intro > *", ".project-card"]);
       gsap.from(".projects__intro > *", {
         opacity: 0,
         y: 20,
         duration: 0.6,
         stagger: 0.08,
         ease: "power3.out",
+        onComplete: () => gsap.set(".projects__intro > *", { clearProps: "opacity,transform" }),
         scrollTrigger: { trigger: root.current, start: "top 75%" },
       });
       gsap.from(".project-card", {
@@ -41,6 +45,7 @@ export default function ProjectsCarousel() {
         duration: 0.6,
         stagger: 0.1,
         ease: "power3.out",
+        onComplete: () => gsap.set(".project-card", { clearProps: "opacity,transform" }),
         scrollTrigger: { trigger: trackRef.current, start: "top 82%" },
       });
     },

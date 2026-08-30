@@ -80,10 +80,15 @@
   font-family: var(--font-display);
   font-weight: 700;
   font-size: var(--fs-display-xl);
-  line-height: var(--lh-tight);
+  /* Briller é bem mais "cheia" por tamanho de fonte que a Baloo 2 usada como
+     placeholder (cap-height da Briller ≈ 0.667em vs. medição de ~21.75px de
+     cap-height no render Figma/Home.png a 1440px). --fs-display-xl acima já
+     foi recalibrado para essa proporção; a line-height um pouco mais folgada
+     compensa o espaçamento vertical entre linhas visto no mesmo render. */
+  line-height: 1.15;
   letter-spacing: -0.01em;
   color: var(--cor-texto-primario);
-  max-width: 21ch;
+  max-width: 584px;
 }
 
 .hero__headline .word {
