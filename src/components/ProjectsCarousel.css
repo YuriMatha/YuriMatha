@@ -1,0 +1,185 @@
+.projects {
+  background: var(--cor-fundo-primario);
+  padding-block: var(--section-padding-y);
+}
+
+.projects__intro-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+  margin-top: var(--space-5);
+}
+
+.projects__headline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-display-lg);
+  line-height: var(--lh-snug);
+  max-width: 24ch;
+  color: var(--cor-texto-primario);
+}
+
+.projects__nav {
+  display: none;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+@media (min-width: 760px) {
+  .projects__nav {
+    display: flex;
+  }
+}
+
+.projects__nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--cor-superficie-card);
+  color: var(--cor-texto-secundario);
+  border: 1px solid var(--cor-borda-sutil);
+  transition: background var(--dur-fast), color var(--dur-fast), opacity var(--dur-fast);
+}
+
+.projects__nav-btn--primary {
+  background: var(--cor-destaque-claro);
+  color: var(--azul-950);
+  border-color: transparent;
+}
+
+.projects__nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.projects__nav-btn:not(:disabled):hover {
+  filter: brightness(1.1);
+}
+
+.projects__track {
+  display: flex;
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.projects__track::-webkit-scrollbar {
+  display: none;
+}
+
+.projects__track-pad {
+  flex: 0 0 max(var(--container-pad) - var(--space-6), 0px);
+}
+
+.project-card {
+  flex: 0 0 auto;
+  width: min(78vw, 380px);
+  scroll-snap-align: start;
+  background: var(--cor-superficie-card);
+  border: 1px solid var(--cor-borda-sutil);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--dur-base) var(--ease-out-quart), border-color var(--dur-base);
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--cor-borda-media);
+}
+
+.project-card__media {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.project-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out-quart);
+}
+
+.project-card:hover .project-card__media img {
+  transform: scale(1.05);
+}
+
+.project-card__info {
+  padding: var(--space-5) var(--space-6) var(--space-6);
+}
+
+.project-card__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.project-card__title-row h3 {
+  font-size: var(--fs-body-lg);
+  font-weight: 600;
+  color: var(--cor-texto-primario);
+}
+
+.project-card__arrow {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--cor-fundo-secundario);
+  color: var(--cor-texto-primario);
+  transition: background var(--dur-fast), transform var(--dur-fast);
+}
+
+.project-card:hover .project-card__arrow {
+  background: var(--cor-destaque-claro);
+  color: var(--azul-950);
+  transform: rotate(45deg);
+}
+
+.project-card__context {
+  margin-top: var(--space-3);
+  font-size: var(--fs-body-sm);
+  color: var(--cor-texto-secundario);
+  min-height: 2.6em;
+}
+
+.project-card__role {
+  display: inline-flex;
+  margin-top: var(--space-4);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--cor-borda-media);
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono-sm);
+  color: var(--cor-texto-secundario);
+}
+
+.projects__pagination {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-7);
+}
+
+.projects__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--cor-borda-media);
+  transition: width var(--dur-base) var(--ease-out-quart), background var(--dur-base);
+}
+
+.projects__dot.is-active {
+  width: 26px;
+  background: var(--cor-destaque-claro);
+}

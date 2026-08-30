@@ -1,0 +1,35 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--cor-destaque-claro);
+}
+
+.logo--dark {
+  color: var(--azul-950);
+}
+
+.logo__mark {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+.logo__divider {
+  width: 1px;
+  height: 24px;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+.logo__word {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: var(--ls-wordmark);
+  color: var(--cor-texto-primario);
+}
+
+.logo--dark .logo__word {
+  color: var(--azul-950);
+}

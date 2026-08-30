@@ -1,0 +1,36 @@
+import "./Logo.css";
+
+/**
+ * Assinatura oficial YuriMatha: símbolo "YM" (Logo/YuriMatha.svg, vetor oficial,
+ * inalterado) + wordmark "YURI MATHA" tipografado (Poppins, tracking largo),
+ * reproduzindo a variante "Azul Claro sobre Navy" do manual de marca.
+ * A cor é herdada via currentColor para casar com as variantes oficiais
+ * (Logo — Azul Claro sobre Navy / Branco sobre Navy) conforme o fundo.
+ */
+export default function Logo({ tone = "light", className = "" }) {
+  return (
+    <a href="#topo" className={`logo logo--${tone} ${className}`} aria-label="Yuri Matha — início">
+      <svg
+        className="logo__mark"
+        viewBox="0 0 2048 2048"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeMiterlimit="10"
+        strokeWidth="32"
+        aria-hidden="true"
+      >
+        <polyline points="774.19 364 1026.56 778.29 1273.83 364" />
+        <polyline points="1378.24 729.23 1126.49 1127.7 1126.49 971.86 1511.5 364" />
+        <line x1="915.77" y1="1122.09" x2="665.38" y2="729.23" />
+        <line x1="431.14" y1="864" x2="431.14" y2="1684" />
+        <line x1="1616.86" y1="864" x2="1616.86" y2="1684" />
+        <path d="M597.21,1557.13v-610.05l315.65,495.21c.85,1.34,2.94.72,2.94-.85v-471l-383.59-606.44" />
+        <polyline points="1126.49 1459.55 1450.28 947.08 1448.04 1557.13" />
+        <line x1="1418.91" y1="670.35" x2="1448.35" y2="627.52" />
+      </svg>
+      <span className="logo__divider" aria-hidden="true" />
+      <span className="logo__word">YURI MATHA</span>
+    </a>
+  );
+}

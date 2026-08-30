@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>Super Copy — Relatório (Yuri Matha)</title>
+<style>
+  :root{color-scheme: light dark; --bg:#0b0f1a; --card:#131a28; --text:#f2f5fb; --muted:#9aa6c4; --accent:#8fb0ff; --good:#3ddc84; --line:rgba(255,255,255,0.1);}
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,Poppins,sans-serif;margin:0;padding:0 0 80px;}
+  header{padding:48px clamp(20px,5vw,80px) 24px;border-bottom:1px solid var(--line)}
+  header h1{margin:0 0 8px;font-size:1.9rem}
+  header p{margin:0;color:var(--muted);max-width:70ch;line-height:1.6}
+  .scores{display:flex;gap:16px;margin-top:24px;flex-wrap:wrap}
+  .score{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 22px;min-width:160px}
+  .score b{display:block;font-size:1.6rem}
+  main{padding:32px clamp(20px,5vw,80px)}
+  .nota{background:rgba(143,176,255,0.08);border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin-bottom:36px;line-height:1.7;color:var(--muted)}
+  .nota b{color:var(--text)}
+  h2{font-size:1.2rem;margin:0 0 18px;padding-top:8px}
+  .item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:18px}
+  .item .onde{font-family:monospace;font-size:.78rem;color:var(--muted);margin-bottom:10px}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:720px){.pair{grid-template-columns:1fr}}
+  .antes,.depois{padding:14px 16px;border-radius:10px;font-size:.95rem;line-height:1.55}
+  .antes{background:rgba(255,255,255,0.03);border:1px dashed var(--line)}
+  .depois{background:rgba(61,220,132,0.08);border:1px solid rgba(61,220,132,0.35)}
+  .tag{display:inline-block;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
+  .motivo{margin-top:12px;color:var(--muted);font-size:.88rem;line-height:1.6}
+  .ok{border-color:rgba(61,220,132,0.4)}
+  .ok .onde{color:var(--good)}
+  footer{padding:24px clamp(20px,5vw,80px);color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Super Copy — Relatório de leitura</h1>
+  <p>Auditoria da copy do site <b>yurimatha.com.br</b> pelos princípios clássicos de copywriting (Ogilvy, Caples, Sugarman, Cialdini). Este relatório é <b>apenas consultivo</b> — nenhuma linha aqui foi aplicada ao site. A copy oficial do Figma/PDF permanece intacta na implementação, conforme instrução do projeto.</p>
+  <div class="scores">
+    <div class="score">Nota geral<b>4/5</b></div>
+    <div class="score">CTAs específicos<b>Sim</b></div>
+    <div class="score">Prova inventada<b>Zero</b></div>
+  </div>
+</header>
+<main>
+  <div class="nota">
+    <b>Leitura em sequência (só títulos + botões, como um visitante apressado lê):</b><br/>
+    "Toda empresa quer um UX/UI que 'pensa no negócio'..." → Ver projetos / Ou chama no WhatsApp → "A intersecção exata entre a lógica do código e a experiência do usuário." → "Da estratégia ao pixel, do protótipo ao código de alta fidelidade." → "Trabalhos que provam design estratégico na prática e geram valor real." → "Alguma dessas telas se parece com o que você precisa?" → Chamar no WhatsApp.
+    <br/><br/>
+    Essa sequência sozinha já explica a oferta — é um sinal forte. A copy fornecida (arquivo "Copy - Portfólio Yúri Matheus V2") já foi escrita com técnica: o hero usa lacuna de curiosidade + prova de especificidade, e o rodapé fecha o ciclo retomando a promessa do início em vez de abrir um assunto novo. Por isso as oportunidades abaixo são <b>ajustes finos</b>, não uma reescrita.
+  </div>
+
+  <h2>Oportunidades de teste A/B</h2>
+
+  <div class="item">
+    <div class="onde">.site-header__cta · nav "Iniciar um projeto"</div>
+    <div class="pair">
+      <div><span class="tag">Atual</span><div class="antes">Iniciar um projeto</div></div>
+      <div><span class="tag">Variante pra testar</span><div class="depois">Falar sobre um projeto</div></div>
+    </div>
+    <div class="motivo"><b>Por quê:</b> "Iniciar" pede um compromisso maior do que a maioria decide dar clicando num header. "Falar sobre" é o mesmo destino (rola até o Contato) com uma promessa menor de atrito — o escorregador de Sugarman funciona melhor com o primeiro degrau mais baixo.</div>
+  </div>
+
+  <div class="item">
+    <div class="onde">.contact__conversion-card .btn-accent · "Chamar no WhatsApp"</div>
+    <div class="pair">
+      <div><span class="tag">Atual</span><div class="antes">Chamar no WhatsApp</div></div>
+      <div><span class="tag">Variante pra testar</span><div class="depois">Mandar o desafio agora</div></div>
+    </div>
+    <div class="motivo"><b>Por quê:</b> o card já tem 3 promessas específicas acima do botão (retorno em 1h, alinhamento técnico, foco em negócio) — nomear a ação pelo que a pessoa ganha ("mandar o desafio") em vez do canal ("WhatsApp", já repetido 2x na seção) reduz repetição e reforça o benefício reafirmado na promessa #1.</div>
+  </div>
+
+  <div class="item">
+    <div class="onde">.about__paragraph · 2º parágrafo do Sobre mim</div>
+    <div class="pair">
+      <div><span class="tag">Atual</span><div class="antes">Eu não desenho apenas telas atraentes; eu planejo sistemas viáveis. Compreendo a arquitetura de dados, limitações de API e frameworks modernos.</div></div>
+      <div><span class="tag">Variante pra testar</span><div class="depois">Eu não entrego telas bonitas; entrego telas que o time de dev consegue construir sem me chamar de novo. Sei o que uma API aceita antes de desenhar o campo que ela não suporta.</div></div>
+    </div>
+    <div class="motivo"><b>Por quê:</b> especificidade de Ogilvy — trocar o abstrato ("sistemas viáveis", "frameworks modernos") por uma consequência concreta que o leitor já sentiu na pele (retrabalho por handoff ruim). O ponto já está certo, só falta o exemplo palpável.</div>
+  </div>
+
+  <div class="item ok">
+    <div class="onde">Hero · headline + subheadline</div>
+    <div class="antes" style="margin-top:6px">Mantido como está — já é a versão mais forte das duas exploradas no PDF de copy (V2, gancho de curiosidade). Não mexer.</div>
+  </div>
+
+  <div class="item ok">
+    <div class="onde">Contato · headline "Alguma dessas telas se parece com o que você precisa?"</div>
+    <div class="antes" style="margin-top:6px">Mantido como está — retoma a prova visual mostrada na seção de Projetos e fecha o ciclo com a promessa do Hero. É o tipo de amarração que normalmente precisa ser adicionada; aqui já existe.</div>
+  </div>
+
+  <h2>Sinais de escrita genérica de IA verificados</h2>
+  <div class="item">
+    Nenhuma linha da copy oficial usa os tiques comuns de texto gerado por IA em português (não há "além disso", "é importante notar", "no mundo atual", intensificadores vazios como "revolucionário" ou "incrível", nem métricas fabricadas). O texto é direto, específico e assinado com detalhes verificáveis (ADS, 6+ anos, nome da empresa de passagens). Nada a corrigir nessa frente.
+  </div>
+</main>
+<footer>
+  Gerado com a skill <b>super-copy</b> como leitura consultiva separada — a copy do site (index.html / src/lib/content.js) não foi alterada.
+</footer>
+</body>
+</html>
