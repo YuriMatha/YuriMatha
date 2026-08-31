@@ -1,6 +1,13 @@
 .hero {
   position: relative;
-  min-height: 100svh;
+  /* Piso mínimo de altura: em janelas muito largas e baixas (monitores
+     ultrawide, navegador não maximizado verticalmente), 100svh sozinho
+     deixa a hero "achatada" — a proporção da janela fica bem mais larga
+     que a do vídeo (16:9), o que força um corte vertical agressivo e faz
+     a silhueta parecer pequena/cortada perto do queixo, bem diferente do
+     enquadramento generoso do Figma. O piso de 760px garante respiro
+     vertical mínimo mesmo nesses casos. */
+  min-height: max(100svh, 760px);
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -21,17 +28,30 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Recalibrado: medindo o nariz/silhueta do vídeo contra o mesmo ponto no
-     render Figma/Home.png (crop 1440x1007 do Hero), o enquadramento correto
-     usa ~63% no eixo x (antes 78%, por isso o vídeo aparecia deslocado para
-     a direita). Y mantido baixo (20%) por segurança em viewports mais
-     estreitas/altas onde o corte vertical entra em jogo. */
-  object-position: 63% 20%;
+  /* Nariz/silhueta calibrados contra o crop do Hero no Figma (Figma/Home.png,
+     1440x1007): o rosto fica ~55% a partir da esquerda. Com object-fit:cover
+     e a proporção do vídeo (1280x720) perto da proporção comum de tela,
+     object-position sozinho tem pouco efeito (a folga de corte é pequena) —
+     por isso o vídeo parecia "sempre igual" ao ajustar só esse valor. */
+  object-position: 55% 25%;
   /* mask-image removido: era uma máscara de alpha contínua sobre um vídeo
      1920x1080 em reprodução constante (custo de composição/GPU alto — uma
      das causas do "lag" relatado). O .hero__vignette abaixo já produz um
      esmaecimento visualmente equivalente com uma única camada estática. */
   opacity: 0.92;
+}
+
+/* Em janelas bem mais largas que altas (proporção > 3:2 — monitores ultrawide
+   ou navegador com pouca altura), object-fit:cover passa a cortar só na
+   vertical (a largura do vídeo bate com a da tela), cortando o topo do
+   cabelo e "encolhendo" a silhueta perto do queixo. Um leve zoom aqui
+   recupera o enquadramento generoso do Figma nesses casos. */
+@media (min-aspect-ratio: 3/2) {
+  .hero__portrait,
+  .hero__portrait-fallback {
+    transform: scale(1.22);
+    transform-origin: 68% 30%;
+  }
 }
 
 .hero__portrait-fallback {

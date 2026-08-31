@@ -7,7 +7,7 @@
  */
 
 export const SITE = {
-  nome: "Yuri Matheus",
+  nome: "Yuri Matha",
   email: "pot@yurimatha.com.br",
   telefone: "+55 62 99440-2786",
   whatsappHref: "https://wa.me/5562994402786",
@@ -144,8 +144,6 @@ export const CONTATO = {
 
 export const FOOTER = {
   copy: "© 2026 Yuri Matha. Projetado pensando na experiência, construído sabendo o código.",
-  /* Nenhuma URL de rede social foi encontrada em /Redes (arquivo vazio) —
-     os hrefs ficam vazios até serem fornecidos, para não inventar links. */
   redes: [
     { nome: "LinkedIn", href: "https://www.linkedin.com/in/yuri-matha/" },
     { nome: "Instagram", href: "https://www.instagram.com/yuri_matha" },

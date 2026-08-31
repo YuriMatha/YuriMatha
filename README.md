@@ -26,6 +26,33 @@ npm run preview   # serve a build de produção localmente
 - **Capas de projeto**: `Projetos/Capas/Capa - Gerenciador Mobile.png`,
   `Capa - Ti_Frete.png`, `Capa - Monitriip.png`, `Capa - Aplicativos.png`.
 
+## Correções recentes (pós-deploy) — rodada 2
+
+7. **Vídeo do Hero ainda "igual" depois da primeira tentativa de correção.**
+   A primeira correção (mexer só no `object-position`) mudava muito pouco
+   porque, com a proporção do vídeo (1280x720 ≈ 16:9) próxima da proporção
+   comum de tela, `object-fit: cover` sobra pouca folga pra cortar — em
+   janelas mais largas que altas (ex.: 1857x873, comum em monitor grande
+   sem o navegador maximizado na vertical) o corte acontece só na vertical,
+   e mudar a posição horizontal não tinha efeito nenhum. Comparando o
+   enquadramento do Figma (cabeça ocupa quase toda a altura do frame, bem
+   próxima da câmera) com o que estava saindo, a silhueta aparecia pequena
+   e cortada perto do queixo. Corrigido em `Hero.css` com: (a) um piso de
+   altura na seção (`min-height: max(100svh, 760px)`) pra ela não "achatar"
+   demais em janelas baixas; e (b) um zoom (`transform: scale`) aplicado
+   especificamente quando a janela é bem mais larga que alta
+   (`@media (min-aspect-ratio: 3/2)`), recuperando o enquadramento generoso
+   do Figma nesses casos sem alterar o comportamento em telas mais comuns.
+2. **Links de redes sociais.** Adicionadas as URLs de LinkedIn e Instagram
+   (`src/lib/content.js` → `FOOTER.redes`, e o `sameAs` do JSON-LD em
+   `index.html`) — os ícones no rodapé agora abrem os perfis reais.
+3. **Carrossel de projetos: loop infinito.** `ProjectsCarousel.jsx`
+   renderiza o conjunto de cards três vezes (cópia–real–cópia) e, assim que
+   o scroll (incluindo a animação suave) chega numa das cópias, realinha
+   instantaneamente pro conjunto real na posição equivalente — o usuário
+   nunca vê o salto. Os botões de seta agora navegam infinitamente em
+   ambas as direções (sem desabilitar no primeiro/último projeto).
+
 ## Correções recentes (pós-deploy)
 
 1. **Bug corrigido: texto do Hero sumindo em produção.** No domínio temporário
