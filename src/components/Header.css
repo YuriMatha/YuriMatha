@@ -56,7 +56,7 @@
   color: var(--cor-texto-primario);
 }
 
-.site-nav a.is-active::after {
+.site-nav a::after {
   content: "";
   position: absolute;
   left: 0;
@@ -65,6 +65,13 @@
   height: 2px;
   background: var(--cor-destaque-claro);
   border-radius: var(--radius-pill);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-out-quart);
+}
+
+.site-nav a.is-active::after {
+  transform: scaleX(1);
 }
 
 .site-header__cta {

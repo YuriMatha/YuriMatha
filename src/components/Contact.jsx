@@ -15,26 +15,36 @@ export default function Contact() {
 
   useGSAP(
     () => {
-      // Guard against overlapping/duplicate ScrollTrigger instances fighting over the
-      // same elements (which was leaving hero text stuck invisible in production).
-      gsap.killTweensOf([".contact__left > *", ".contact__conversion-card"]);
-      gsap.from(".contact__left > *", {
-        opacity: 0,
-        y: 24,
-        duration: 0.6,
-        stagger: 0.08,
-        ease: "power3.out",
-        onComplete: () => gsap.set(".contact__left > *", { clearProps: "opacity,transform" }),
-        scrollTrigger: { trigger: root.current, start: "top 75%" },
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set([".contact__left > *", ".contact__conversion-card"], { clearProps: "opacity,transform" });
       });
-      gsap.from(".contact__conversion-card", {
-        opacity: 0,
-        y: 30,
-        duration: 0.7,
-        ease: "power3.out",
-        onComplete: () => gsap.set(".contact__conversion-card", { clearProps: "opacity,transform" }),
-        scrollTrigger: { trigger: root.current, start: "top 70%" },
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // Guard against overlapping/duplicate ScrollTrigger instances fighting over the
+        // same elements (which was leaving hero text stuck invisible in production).
+        gsap.killTweensOf([".contact__left > *", ".contact__conversion-card"]);
+        gsap.from(".contact__left > *", {
+          opacity: 0,
+          y: 24,
+          duration: 0.6,
+          stagger: 0.08,
+          ease: "power3.out",
+          onComplete: () => gsap.set(".contact__left > *", { clearProps: "opacity,transform" }),
+          scrollTrigger: { trigger: root.current, start: "top 75%" },
+        });
+        gsap.from(".contact__conversion-card", {
+          opacity: 0,
+          y: 30,
+          duration: 0.7,
+          ease: "power3.out",
+          onComplete: () => gsap.set(".contact__conversion-card", { clearProps: "opacity,transform" }),
+          scrollTrigger: { trigger: root.current, start: "top 70%" },
+        });
       });
+
+      return () => mm.revert();
     },
     { scope: root }
   );

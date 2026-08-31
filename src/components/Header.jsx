@@ -1,13 +1,47 @@
 import { useEffect, useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import Logo from "./Logo.jsx";
 import { NAV_LINKS } from "../lib/content.js";
 import "./Header.css";
+
+const HEADER_ANIM_TARGETS = [".logo", ".site-nav li", ".site-header__cta", ".site-header__burger"];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("#inicio");
   const headerRef = useRef(null);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(HEADER_ANIM_TARGETS, { clearProps: "opacity,transform" });
+      });
+
+      // Header entra junto com o Hero (mesmo instante de carregamento) em vez de
+      // simplesmente "aparecer" pronto enquanto o resto da página faz uma entrada
+      // coreografada — sem isso o topo da página quebrava a continuidade do
+      // primeiro impacto. Rápido e discreto (personalidade "corporate": chrome
+      // persistente não deve competir de atenção com o conteúdo do Hero).
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.killTweensOf(HEADER_ANIM_TARGETS);
+        gsap.from(HEADER_ANIM_TARGETS, {
+          opacity: 0,
+          y: -10,
+          duration: 0.5,
+          stagger: 0.05,
+          ease: "power2.out",
+          clearProps: "opacity,transform",
+        });
+      });
+
+      return () => mm.revert();
+    },
+    { scope: headerRef }
+  );
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);

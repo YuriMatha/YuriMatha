@@ -21,8 +21,7 @@
   z-index: 0;
 }
 
-.hero__portrait,
-.hero__portrait-fallback {
+.hero__portrait {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -47,15 +46,10 @@
    cabelo e "encolhendo" a silhueta perto do queixo. Um leve zoom aqui
    recupera o enquadramento generoso do Figma nesses casos. */
 @media (min-aspect-ratio: 3/2) {
-  .hero__portrait,
-  .hero__portrait-fallback {
+  .hero__portrait {
     transform: scale(1.22);
     transform-origin: 68% 30%;
   }
-}
-
-.hero__portrait-fallback {
-  z-index: -1;
 }
 
 .hero__glow {
@@ -81,10 +75,16 @@
 }
 
 .hero__content {
+  /* Sem max-width próprio: herda de .container (mesmo padding-inline e
+     margin-inline:auto do header), senão esse max-width recentralizava o
+     bloco inteiro (o "container" com margin-inline:auto passa a centralizar
+     em 760px em vez de alinhar à mesma margem esquerda do header/logo —
+     por isso o texto do Hero aparecia fora do grid, deslocado ~340px pra
+     direita em relação ao "YURI MATHA" do header). A largura do headline já
+     é limitada por si só logo abaixo (max-width: 584px). */
   position: relative;
   z-index: 1;
   padding-top: var(--space-9);
-  max-width: 760px;
 }
 
 .hero__eyebrow-line {
@@ -126,7 +126,8 @@
 
 .hero__scroll-cue {
   position: absolute;
-  left: var(--container-pad);
+  left: 50%;
+  transform: translateX(-50%);
   bottom: var(--space-6);
   z-index: 1;
   width: 26px;
@@ -171,8 +172,7 @@
     align-items: flex-end;
     padding-bottom: var(--space-9);
   }
-  .hero__portrait,
-  .hero__portrait-fallback {
+  .hero__portrait {
     object-position: 55% 22%;
     opacity: 0.5;
   }

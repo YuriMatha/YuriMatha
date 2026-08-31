@@ -33,31 +33,41 @@ export default function ProjectsCarousel() {
 
   useGSAP(
     () => {
-      // Guard against overlapping/duplicate ScrollTrigger instances fighting over the
-      // same elements (which was leaving hero text stuck invisible in production).
       // Só o bloco "real" (não clonado) participa da animação de entrada —
       // as cópias usadas pelo loop infinito ficam fora da viewport inicial
       // e não devem competir no stagger.
       const realCards = ".project-card:not([aria-hidden='true'])";
-      gsap.killTweensOf([".projects__intro > *", realCards]);
-      gsap.from(".projects__intro > *", {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        stagger: 0.08,
-        ease: "power3.out",
-        onComplete: () => gsap.set(".projects__intro > *", { clearProps: "opacity,transform" }),
-        scrollTrigger: { trigger: root.current, start: "top 75%" },
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set([".projects__intro > *", realCards], { clearProps: "opacity,transform" });
       });
-      gsap.from(realCards, {
-        opacity: 0,
-        y: 30,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power3.out",
-        onComplete: () => gsap.set(realCards, { clearProps: "opacity,transform" }),
-        scrollTrigger: { trigger: trackRef.current, start: "top 82%" },
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // Guard against overlapping/duplicate ScrollTrigger instances fighting over the
+        // same elements (which was leaving hero text stuck invisible in production).
+        gsap.killTweensOf([".projects__intro > *", realCards]);
+        gsap.from(".projects__intro > *", {
+          opacity: 0,
+          y: 20,
+          duration: 0.6,
+          stagger: 0.08,
+          ease: "power3.out",
+          onComplete: () => gsap.set(".projects__intro > *", { clearProps: "opacity,transform" }),
+          scrollTrigger: { trigger: root.current, start: "top 75%" },
+        });
+        gsap.from(realCards, {
+          opacity: 0,
+          y: 30,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power3.out",
+          onComplete: () => gsap.set(realCards, { clearProps: "opacity,transform" }),
+          scrollTrigger: { trigger: trackRef.current, start: "top 82%" },
+        });
       });
+
+      return () => mm.revert();
     },
     { scope: root }
   );

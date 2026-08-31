@@ -26,6 +26,65 @@ npm run preview   # serve a build de produção localmente
 - **Capas de projeto**: `Projetos/Capas/Capa - Gerenciador Mobile.png`,
   `Capa - Ti_Frete.png`, `Capa - Monitriip.png`, `Capa - Aplicativos.png`.
 
+## Correções recentes (pós-deploy) — rodada 4 (motion design)
+
+Passada de revisão completa das animações da página usando princípios de
+motion design (timing, easing, coreografia, camadas de movimento).
+
+1. **Acessibilidade: animações do GSAP ignoravam `prefers-reduced-motion`.**
+   A regra global (`global.css`) neutraliza `transition`/`animation` de CSS
+   quando o usuário pede menos movimento no sistema, mas isso não tem efeito
+   nenhum sobre tweens do GSAP (que interpolam estilo via JS a cada frame) —
+   ou seja, todo mundo que ativou essa preferência ainda via a página inteira
+   animando normalmente. Corrigido em **todos** os componentes com GSAP
+   (`Hero`, `AboutMe`, `Services`, `Contact`, `ProjectsCarousel`, e os dois
+   novos abaixo, `Header` e `Footer`) usando `gsap.matchMedia()`: com a
+   preferência ativa, o conteúdo aparece direto no estado final; sem ela,
+   as animações rodam normalmente.
+2. **Hero "chapado" — faltava camada ambiente.** Adicionado um "respiro"
+   sutil no glow atrás da silhueta (`.hero__glow`: escala + opacidade, 5s,
+   `sine.inOut`, loop infinito) — dá vida de fundo à cena sem competir com o
+   texto nem pesar na performance (só `transform`/`opacity`).
+3. **Cards de Serviços "chapados" — faltava camada secundária.** Além da
+   entrada (opacidade + posição), o pontinho de cada card
+   (`.service-card__node`) agora dá um pequeno "pop" (`scale` com
+   `back.out`) logo depois do card pousar — um leve overshoot justificado
+   pelo peso visual pequeno do elemento (ícone/badge), mesmo com o resto da
+   página seguindo uma personalidade "premium" sem overshoot.
+4. **Header e Footer sem nenhuma animação de entrada.** Eram as duas únicas
+   seções da página que só "apareciam" prontas, quebrando a consistência
+   com o resto (Hero, Sobre mim, Serviços, Projetos e Contato já revelam o
+   conteúdo). Adicionado ao `Header` um fade+leve queda rápido e discreto,
+   disparado junto com o carregamento (chrome persistente não deve competir
+   de atenção com o Hero); ao `Footer`, uma entrada por scroll no mesmo
+   padrão usado no resto da página.
+5. **Sublinhado do link ativo no menu aparecia sem transição.** O
+   `::after` do link ativo só existia condicionalmente (`is-active`), então
+   "pipocava" na tela em vez de se mover. Reestruturado para existir sempre
+   com `transform: scaleX(0)` e animar suavemente para `scaleX(1)`.
+
+## Correções recentes (pós-deploy) — rodada 3
+
+1. **Texto do Hero "fora do grid".** `.hero__content` tinha `max-width: 760px`
+   próprio, mas também herdava `margin-inline: auto` da classe `.container`
+   — com um max-width menor que o container inteiro, isso passou a
+   centralizar o bloco de texto no meio da seção em vez de alinhá-lo à
+   mesma margem esquerda do logo no header (diferença de ~340px na tela).
+   Removido o `max-width` de `.hero__content`; a largura do título já é
+   limitada por si só (`.hero__headline { max-width: 584px }`).
+2. **Ícone de scroll fora do centro.** `.hero__scroll-cue` usava
+   `left: var(--container-pad)` (alinhado à margem esquerda do container).
+   Trocado para `left: 50%; transform: translateX(-50%)` — agora fica
+   centralizado horizontalmente, embaixo da seção.
+3. **"Segunda imagem" atrás do vídeo do Hero.** Existia um `<img>` de
+   fallback (`hero-poster.jpg/webp`) posicionado atrás do vídeo (pensado
+   pra navegadores sem suporte a autoplay de vídeo), com o mesmo
+   enquadramento do vídeo mas sendo uma imagem estática separada — em
+   alguns momentos (esp. durante o carregamento) dava a impressão de uma
+   segunda silhueta fantasma. Removido o `<img>` de fallback em `Hero.jsx`;
+   o `<video>` já usa esse mesmo arquivo como `poster` (mostrado
+   nativamente enquanto o vídeo carrega), então nada foi perdido.
+
 ## Correções recentes (pós-deploy) — rodada 2
 
 7. **Vídeo do Hero ainda "igual" depois da primeira tentativa de correção.**

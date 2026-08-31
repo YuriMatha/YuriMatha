@@ -25,30 +25,46 @@ export default function Services() {
 
   useGSAP(
     () => {
-      // Guard against overlapping/duplicate ScrollTrigger instances fighting over the
-      // same elements (which was leaving hero text stuck invisible in production).
-      gsap.killTweensOf(".services__intro > *");
-      gsap.from(".services__intro > *", {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        stagger: 0.08,
-        ease: "power3.out",
-        onComplete: () => gsap.set(".services__intro > *", { clearProps: "opacity,transform" }),
-        scrollTrigger: { trigger: root.current, start: "top 75%" },
-      });
-      gsap.utils.toArray(".service-card").forEach((card, i) => {
-        gsap.killTweensOf(card);
-        gsap.from(card, {
-          opacity: 0,
-          y: 28,
-          duration: 0.6,
-          ease: "power3.out",
-          delay: (i % 3) * 0.08,
-          onComplete: () => gsap.set(card, { clearProps: "opacity,transform" }),
-          scrollTrigger: { trigger: card, start: "top 88%" },
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set([".services__intro > *", ".service-card", ".service-card__node"], {
+          clearProps: "opacity,transform",
         });
       });
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // Guard against overlapping/duplicate ScrollTrigger instances fighting over the
+        // same elements (which was leaving hero text stuck invisible in production).
+        gsap.killTweensOf(".services__intro > *");
+        gsap.from(".services__intro > *", {
+          opacity: 0,
+          y: 20,
+          duration: 0.6,
+          stagger: 0.08,
+          ease: "power3.out",
+          onComplete: () => gsap.set(".services__intro > *", { clearProps: "opacity,transform" }),
+          scrollTrigger: { trigger: root.current, start: "top 75%" },
+        });
+        gsap.utils.toArray(".service-card").forEach((card, i) => {
+          gsap.killTweensOf(card);
+          const node = card.querySelector(".service-card__node");
+          // Camada secundária: o card entra, e o "node" (pontinho) dá um pequeno
+          // pop logo depois de pousar — pequeno follow-through que evita a
+          // entrada "chapada" de só opacidade+posição.
+          const tl = gsap.timeline({
+            delay: (i % 3) * 0.08,
+            scrollTrigger: { trigger: card, start: "top 88%" },
+            onComplete: () => gsap.set([card, node], { clearProps: "opacity,transform" }),
+          });
+          tl.from(card, { opacity: 0, y: 28, duration: 0.6, ease: "power3.out" });
+          if (node) {
+            tl.from(node, { scale: 0, duration: 0.35, ease: "back.out(1.7)" }, "-=0.25");
+          }
+        });
+      });
+
+      return () => mm.revert();
     },
     { scope: root }
   );
