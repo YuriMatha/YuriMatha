@@ -87,8 +87,21 @@
   padding-top: var(--space-9);
 }
 
-.hero__eyebrow-line {
-  margin-bottom: var(--space-6);
+/* Rótulo de intro desfocado — atmosférico, não é pra ser lido palavra por
+   palavra (por isso pointer-events/select desligados): dá profundidade antes
+   do headline "digitado" (typewriter) abaixo. Reaproveita o mesmo texto do
+   eyebrow anterior, só que quebrado em duas linhas, mais desfocado. */
+.hero__intro-blur {
+  pointer-events: none;
+  user-select: none;
+  margin-bottom: var(--space-5);
+  font-family: var(--font-mono);
+  font-size: clamp(0.8125rem, 0.7rem + 0.5vw, 1rem);
+  line-height: 1.4;
+  letter-spacing: var(--ls-mono);
+  text-transform: uppercase;
+  color: var(--cor-texto-primario);
+  filter: blur(3px);
 }
 
 .hero__headline {
@@ -104,10 +117,33 @@
   letter-spacing: -0.01em;
   color: var(--cor-texto-primario);
   max-width: 584px;
+  /* Reserva o espaço final do texto "digitado" (5 linhas ≈ font-size * 1.15 *
+     5) pra a página não pular de altura enquanto o typewriter revela os
+     caracteres. */
+  min-height: calc(var(--fs-display-xl) * 1.15 * 5);
 }
 
-.hero__headline .word {
+/* Cursor piscante do efeito de "máquina de escrever" (ver useTypewriter.js) —
+   some assim que a digitação termina (ver Hero.jsx: `!done && <cursor>`). */
+.hero__typewriter-cursor {
   display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  background: currentColor;
+  vertical-align: middle;
+  animation: hero-blink 1s step-end infinite;
+}
+
+@keyframes hero-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__typewriter-cursor {
+    animation: none;
+  }
 }
 
 .hero__subheadline {
@@ -122,6 +158,19 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
+  /* Independente da timeline do GSAP (subheadline/portrait) e do typewriter
+     do headline — os botões entram sozinhos, 400ms depois do carregamento,
+     via classe alternada em JS (ver Hero.jsx `actionsVisible`). A regra
+     global de prefers-reduced-motion (global.css) já deixa essa transição
+     quase instantânea pra quem pediu menos movimento. */
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--dur-base) ease, transform var(--dur-base) ease;
+}
+
+.hero__actions.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hero__scroll-cue {

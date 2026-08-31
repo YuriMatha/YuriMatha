@@ -1,22 +1,108 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { HERO, SITE } from "../lib/content.js";
+import { useTypewriter } from "../lib/useTypewriter.js";
+import { IconCopy } from "./icons.jsx";
 import heroPosterJpg from "../assets/images/hero-poster.jpg";
 import heroVideoMp4 from "../assets/video/hero-silhouette.mp4";
 import heroVideoWebm from "../assets/video/hero-silhouette.webm";
 import "./Hero.css";
 
-const HERO_ANIM_TARGETS = [
-  ".hero__eyebrow-line",
-  ".hero__headline .word",
-  ".hero__subheadline",
-  ".hero__actions > *",
-  ".hero__portrait",
-];
+const HERO_ANIM_TARGETS = [".hero__subheadline", ".hero__portrait"];
+
+// Reaproveita literalmente um trecho já existente em HERO.subheadline
+// ("...UX/UI, Ux Writing e Ux Strategist.") em vez de inventar copy nova —
+// só quebrado em duas linhas pro rótulo desfocado acima do headline
+// "digitado". Ver Hero.css `.hero__intro-blur`.
+const INTRO_BLUR_LINES = ["Yuri Matha —", "UX/UI, Ux Writing e Ux Strategist"];
 
 export default function Hero() {
   const root = useRef(null);
+  const videoRef = useRef(null);
+  const [actionsVisible, setActionsVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const { displayed: typedHeadline, done: typingDone } = useTypewriter(HERO.headline, {
+    speed: 38,
+    startDelay: 600,
+  });
+
+  // Botões de ação: entram sozinhos 400ms após o carregamento, sem esperar o
+  // headline terminar de "digitar" — pedido explícito do usuário pra essa
+  // entrada ser independente do typewriter.
+  useEffect(() => {
+    const id = setTimeout(() => setActionsVisible(true), 400);
+    return () => clearTimeout(id);
+  }, []);
+
+  // Vídeo controlado pelo movimento horizontal do mouse ("scrub"): a posição
+  // do vídeo acompanha o gesto do cursor em vez de tocar sozinho. Em telas
+  // sem mouse (touch), não existe "mousemove" pra controlar nada, então o
+  // vídeo cairia parado no primeiro quadro pra sempre — nesse caso mantemos
+  // o loop automático de antes (boomerang, sem travamento) em vez de deixar
+  // a hero com uma imagem estática.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return undefined;
+
+    const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!supportsHover) {
+      video.loop = true;
+      video.play().catch(() => {});
+      return undefined;
+    }
+
+    const SENSITIVITY = 0.8;
+    let duration = 0;
+    let targetTime = 0;
+    let seeking = false;
+    let prevX = null;
+
+    const onLoadedMetadata = () => {
+      duration = video.duration || 0;
+      targetTime = video.currentTime;
+    };
+
+    const seekTo = (time) => {
+      if (seeking) return;
+      seeking = true;
+      video.currentTime = time;
+    };
+
+    const onSeeked = () => {
+      seeking = false;
+      // Se o alvo já mudou de novo enquanto o seek anterior ainda estava em
+      // andamento, dispara o próximo agora — evita "afogar" o vídeo com
+      // seeks simultâneos quando o mouse se move rápido.
+      if (Math.abs(targetTime - video.currentTime) > 0.01) {
+        seekTo(targetTime);
+      }
+    };
+
+    const onMouseMove = (e) => {
+      if (!duration) return;
+      if (prevX === null) {
+        prevX = e.clientX;
+        return;
+      }
+      const delta = e.clientX - prevX;
+      prevX = e.clientX;
+      const offset = (delta / window.innerWidth) * SENSITIVITY * duration;
+      targetTime = Math.min(Math.max(targetTime + offset, 0), duration);
+      seekTo(targetTime);
+    };
+
+    video.addEventListener("loadedmetadata", onLoadedMetadata);
+    video.addEventListener("seeked", onSeeked);
+    window.addEventListener("mousemove", onMouseMove);
+    if (video.readyState >= 1) onLoadedMetadata();
+
+    return () => {
+      video.removeEventListener("loadedmetadata", onLoadedMetadata);
+      video.removeEventListener("seeked", onSeeked);
+      window.removeEventListener("mousemove", onMouseMove);
+    };
+  }, []);
 
   useGSAP(
     () => {
@@ -47,11 +133,8 @@ export default function Hero() {
           defaults: { ease: "power3.out" },
           onComplete: revealFinalState,
         });
-        tl.from(".hero__eyebrow-line", { opacity: 0, y: 12, duration: 0.5 })
-          .from(".hero__headline .word", { opacity: 0, y: "0.6em", stagger: 0.012, duration: 0.7 }, "-=0.2")
-          .from(".hero__subheadline", { opacity: 0, y: 16, duration: 0.6 }, "-=0.35")
-          .from(".hero__actions > *", { opacity: 0, y: 14, stagger: 0.08, duration: 0.5 }, "-=0.35")
-          .from(".hero__portrait", { opacity: 0, scale: 1.04, duration: 1 }, "-=0.9");
+        tl.from(".hero__subheadline", { opacity: 0, y: 16, duration: 0.6 })
+          .from(".hero__portrait", { opacity: 0, scale: 1.04, duration: 1 }, "-=0.4");
 
         // Safety net: whatever happens (a stalled tab, a race on load, an interrupted
         // tween), never let the hero text stay invisible for real visitors.
@@ -79,17 +162,26 @@ export default function Hero() {
     { scope: root }
   );
 
-  const words = HERO.headline.split(" ");
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(SITE.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // Clipboard indisponível (ex.: permissão negada) — falha silenciosa; o
+      // e-mail já está visível no texto do próprio botão pra copiar na mão.
+    }
+  };
 
   return (
     <section id="inicio" className="hero" ref={root}>
       <div className="hero__bg" aria-hidden="true">
         <video
+          ref={videoRef}
           className="hero__portrait"
-          autoPlay
           muted
-          loop
           playsInline
+          preload="auto"
           poster={heroPosterJpg}
         >
           <source src={heroVideoWebm} type="video/webm" />
@@ -100,17 +192,17 @@ export default function Hero() {
       </div>
 
       <div className="container hero__content" id="conteudo">
-        <p className="eyebrow hero__eyebrow-line">Yuri Matha — UX/UI</p>
+        <p className="hero__intro-blur" aria-hidden="true">
+          {INTRO_BLUR_LINES[0]}
+          <br />
+          {INTRO_BLUR_LINES[1]}
+        </p>
         <h1 className="hero__headline">
-          {words.map((w, i) => (
-            <span className="word" key={i}>
-              {w}
-              {i < words.length - 1 ? " " : ""}
-            </span>
-          ))}
+          {typedHeadline}
+          {!typingDone && <span className="hero__typewriter-cursor" aria-hidden="true" />}
         </h1>
         <p className="hero__subheadline">{HERO.subheadline}</p>
-        <div className="hero__actions">
+        <div className={`hero__actions ${actionsVisible ? "is-visible" : ""}`}>
           <a
             href="#projetos"
             className="btn btn-primary"
@@ -124,6 +216,10 @@ export default function Hero() {
           <a href={SITE.whatsappHref} className="btn btn-secondary" target="_blank" rel="noreferrer">
             {HERO.ctaSecondary}
           </a>
+          <button type="button" className="btn btn-outline" onClick={handleCopyEmail}>
+            {copied ? "E-mail copiado!" : `Copiar: ${SITE.email}`}
+            <IconCopy width={12} height={12} />
+          </button>
         </div>
       </div>
 

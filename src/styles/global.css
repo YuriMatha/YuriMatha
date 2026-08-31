@@ -212,3 +212,16 @@ p {
   background: var(--glass-grad-btn-hover) padding-box, var(--glass-grad-border-hover) border-box;
   color: var(--cor-destaque-claro);
 }
+
+.btn-outline {
+  /* Pill contornada — usada no botão "copiar e-mail" do Hero, sobre o vídeo:
+     transparente, com borda branca sólida, inverte pra preenchido no hover. */
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: var(--neutro-branco);
+}
+
+.btn-outline:hover {
+  background: var(--neutro-branco);
+  color: var(--azul-950);
+}
