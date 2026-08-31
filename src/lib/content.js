@@ -41,8 +41,6 @@ export const SOBRE = {
 export const SERVICOS = {
   eyebrow: "Serviços",
   headline: "Da estratégia ao pixel, do protótipo ao código de alta fidelidade.",
-  tags: ["DESIGN_DRIVEN", "CODE_FLUENT"],
-  conector: "HANDOFF_FLOW_ENGINE",
   core: [
     {
       titulo: "UX/UI Designer | Ux Writing | Ux Strategist",
@@ -130,7 +128,7 @@ export const CONTATO = {
     },
   ],
   conversao: {
-    badge: "QUICK_CONNECT_FLOW",
+    badge: "Disponível agora",
     headline: "Vamos construir a próxima grande solução juntos",
     promessas: [
       "Retorno rápido (normalmente em menos de 1 hora)",

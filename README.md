@@ -26,6 +26,48 @@ npm run preview   # serve a build de produção localmente
 - Capas de projeto: `Projetos/Capas/Capa - Gerenciador Mobile.png`,
   `Capa - Ti_Frete.png`, `Capa - Monitriip.png`, `Capa - Aplicativos.png`.
 
+## Correções recentes (pós-deploy): rodada 7
+
+O usuário pediu para revisar o efeito da Hero que "não estava funcionando",
+remover as etiquetas em estilo de código (como "DESIGN_DRIVEN CODE_FLUENT")
+espalhadas pela página, suavizar o brilho de fundo das seções, humanizar
+qualquer texto genérico que tivesse sobrado, e dar mais vida ao ícone de
+scroll.
+
+1. Investiguei o efeito da Hero (vídeo controlado pelo mouse, máquina de
+   escrever, rótulo desfocado, pills) rodando testes automatizados, e não
+   encontrei nenhum erro de JavaScript ou falha de carregamento: tudo
+   funciona como esperado em ambiente limpo. A explicação mais provável é
+   uma destas duas: o navegador ou sistema operacional do usuário está
+   configurado com "reduzir movimento" ativado, o que por design faz o site
+   mostrar o headline inteiro de uma vez (sem digitação) e desativa a
+   animação do ícone de scroll, já que essas animações respeitam essa
+   preferência de acessibilidade; ou o site publicado ainda não foi
+   reconstruído e reenviado com as mudanças da rodada anterior. Vale
+   conferir as configurações de acessibilidade do sistema (no Windows:
+   Configurações > Acessibilidade > Efeitos visuais > Efeitos de animação) e
+   confirmar que o build mais recente foi publicado.
+2. Removidas todas as etiquetas em estilo "código" (tudo em maiúsculas com
+   underline, como "DESIGN_DRIVEN", "CODE_FLUENT", "HANDOFF_FLOW_ENGINE",
+   "SERVICE_01"): os tags decorativos ao lado do headline de Serviços foram
+   removidos, o divisor entre os dois blocos de cards virou uma linha
+   simples sem rótulo, a numeração dos cards agora mostra só "01", "02" e
+   assim por diante, e o badge do card de conversão em Contato trocou
+   "QUICK_CONNECT_FLOW" por "Disponível agora".
+3. O brilho ambiente atrás das grades de Serviços, Contato e Projetos
+   (introduzido na rodada de glassmorphism) estava forte demais. Reduzi a
+   opacidade de cada mancha de luz e suavizei a transição pras bordas,
+   deixando o efeito mais discreto.
+4. Revisei os textos que eu mesmo escrevi nas últimas rodadas, não a copy
+   original do Figma, em busca de "fala" genérica de IA: o rótulo desfocado
+   da Hero tinha um travessão desnecessário ("Yuri Matha —"), trocado por
+   vírgula.
+5. O ícone de scroll ganhou uma animação mais trabalhada: o pontinho agora
+   tem uma pequena antecipação (sobe 2px antes de cair, como em animação
+   clássica) e um percurso maior (18px em vez de 14px), e o contorno da pill
+   "respira" bem devagar como camada extra de vida. Continua totalmente
+   desativado para quem usa "reduzir movimento".
+
 ## Correções recentes (pós-deploy): rodada 6 (hero interativo)
 
 O pedido foi reproduzir na Hero o efeito de uma referência (vídeo controlado pelo

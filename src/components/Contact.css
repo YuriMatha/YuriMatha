@@ -16,7 +16,7 @@
   height: 560px;
   max-width: 55vw;
   max-height: 55vw;
-  background: radial-gradient(circle, rgba(69, 122, 255, 0.28), transparent 70%);
+  background: radial-gradient(circle, rgba(69, 122, 255, 0.12), transparent 78%);
   pointer-events: none;
   z-index: 0;
 }
@@ -169,7 +169,7 @@
   right: -20%;
   width: 260px;
   height: 260px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 75%);
   pointer-events: none;
   z-index: -1;
 }

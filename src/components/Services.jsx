@@ -11,7 +11,7 @@ function ServiceCard({ index, titulo, descricao }) {
   return (
     <li className="service-card">
       <div className="service-card__header">
-        <span className="service-card__number">SERVICE_{String(index).padStart(2, "0")}</span>
+        <span className="service-card__number">{String(index).padStart(2, "0")}</span>
         <span className="service-card__node" aria-hidden="true" />
       </div>
       <h3 className="service-card__title">{titulo}</h3>
@@ -76,9 +76,6 @@ export default function Services() {
           <p className="eyebrow">{SERVICOS.eyebrow}</p>
           <div className="services__intro-row">
             <h2 className="services__headline">{SERVICOS.headline}</h2>
-            <p className="services__tags">
-              {SERVICOS.tags.join(" ")}
-            </p>
           </div>
         </div>
 
@@ -88,9 +85,7 @@ export default function Services() {
           ))}
         </ul>
 
-        <div className="services__connector">
-          <span>{SERVICOS.conector}</span>
-        </div>
+        <div className="services__connector" aria-hidden="true" />
 
         <ul className="services__grid services__grid--producao">
           {SERVICOS.producao.map((s, i) => (

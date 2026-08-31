@@ -192,6 +192,12 @@
   }
 }
 
+/* Camada ambiente: o contorno da pill "respira" bem devagar (opacidade),
+   dando uma sensação de vida ao ícone mesmo além do pontinho que cai. */
+.hero__scroll-cue {
+  animation: hero-scroll-cue-pill 2.4s ease-in-out infinite;
+}
+
 .hero__scroll-cue span {
   position: absolute;
   top: 8px;
@@ -201,16 +207,26 @@
   margin-left: -2px;
   border-radius: var(--radius-pill);
   background: var(--cor-destaque-claro);
-  animation: hero-scroll-cue 1.8s ease-in-out infinite;
+  animation: hero-scroll-cue-dot 1.7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-@keyframes hero-scroll-cue {
-  0% { transform: translateY(0); opacity: 1; }
-  70% { transform: translateY(14px); opacity: 0; }
-  100% { transform: translateY(14px); opacity: 0; }
+/* Pequena antecipação (sobe 2px) antes de cair, como no princípio de
+   animação clássica: um gesto nunca começa "frio". */
+@keyframes hero-scroll-cue-dot {
+  0% { transform: translateY(0); opacity: 0; }
+  8% { transform: translateY(-2px); opacity: 1; }
+  55% { transform: translateY(18px); opacity: 1; }
+  85% { transform: translateY(18px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+@keyframes hero-scroll-cue-pill {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero__scroll-cue,
   .hero__scroll-cue span {
     animation: none;
   }

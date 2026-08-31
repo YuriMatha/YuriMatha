@@ -16,7 +16,7 @@
   width: 720px;
   height: 480px;
   max-width: 70vw;
-  background: radial-gradient(ellipse, rgba(69, 122, 255, 0.24), transparent 70%);
+  background: radial-gradient(ellipse, rgba(69, 122, 255, 0.1), transparent 78%);
   pointer-events: none;
   z-index: 0;
 }

@@ -12,10 +12,10 @@ import "./Hero.css";
 const HERO_ANIM_TARGETS = [".hero__subheadline", ".hero__portrait"];
 
 // Reaproveita literalmente um trecho já existente em HERO.subheadline
-// ("...UX/UI, Ux Writing e Ux Strategist.") em vez de inventar copy nova —
+// ("...UX/UI, Ux Writing e Ux Strategist."), em vez de inventar copy nova,
 // só quebrado em duas linhas pro rótulo desfocado acima do headline
 // "digitado". Ver Hero.css `.hero__intro-blur`.
-const INTRO_BLUR_LINES = ["Yuri Matha —", "UX/UI, Ux Writing e Ux Strategist"];
+const INTRO_BLUR_LINES = ["Yuri Matha,", "UX/UI, Ux Writing e Ux Strategist"];
 
 export default function Hero() {
   const root = useRef(null);
