@@ -5,6 +5,22 @@
   overflow: hidden;
 }
 
+/* Mancha de luz ambiente atrás dos cards de vidro (mesmo recurso usado em
+   Serviços) — dá ao blur do vidro fosco algo colorido pra revelar. */
+.contact::before {
+  content: "";
+  position: absolute;
+  top: 20%;
+  right: 4%;
+  width: 560px;
+  height: 560px;
+  max-width: 55vw;
+  max-height: 55vw;
+  background: radial-gradient(circle, rgba(69, 122, 255, 0.28), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .contact__watermark {
   position: absolute;
   top: 6%;
@@ -24,6 +40,7 @@
 
 .contact__grid {
   position: relative;
+  z-index: 1;
   display: grid;
   gap: var(--space-8);
 }
@@ -60,15 +77,23 @@
 }
 
 .contact-card {
+  /* Glassmorphism, mesmo tratamento dos cards de Serviços/Projetos. */
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
   padding: var(--space-5);
-  background: var(--cor-superficie-card);
-  border: 1px solid var(--cor-borda-sutil);
+  background: var(--glass-grad-card) padding-box, var(--glass-grad-border) border-box;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
+  box-shadow: var(--glass-highlight);
   flex-wrap: wrap;
+}
+
+.contact-card:hover {
+  background: var(--glass-grad-card-hover) padding-box, var(--glass-grad-border-hover) border-box;
 }
 
 .contact-card__info {
@@ -119,11 +144,34 @@
 }
 
 .contact__conversion-card {
-  background: var(--cor-superficie-card);
-  border: 1px solid var(--cor-borda-media);
+  /* Card de conversão — vidro fosco "premium" (destaque principal da seção):
+     mesmo gradiente + borda cintilante dos demais cards, mas reforçado com
+     um brilho radial branco suave no canto superior (como o GlassCard de
+     destaque do design system), revelando a mancha de luz atrás
+     (.contact::before). */
+  position: relative;
+  isolation: isolate;
+  z-index: 1;
+  background: var(--glass-grad-card-hover) padding-box, var(--glass-grad-border-hover) border-box;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid transparent;
   border-radius: var(--radius-xl);
   padding: var(--space-7);
-  box-shadow: var(--shadow-elevated);
+  box-shadow: var(--glass-highlight), var(--shadow-elevated);
+  overflow: hidden;
+}
+
+.contact__conversion-card::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -20%;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .contact__conversion-badge-row {

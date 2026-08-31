@@ -117,4 +117,52 @@
   --bp-md: 768px;
   --bp-lg: 1024px;
   --bp-xl: 1280px;
+
+  /* ---------- 10. Glassmorphism ----------
+     Vidro fosco: superfícies translúcidas + blur do que está atrás, com um
+     filete de brilho no topo (highlight) simulando a borda de um vidro real.
+     Usado nos cards (Serviços/Projetos/Contato) e nos botões que ficam sobre
+     mídia (vídeo do Hero, header fixo) — presente no frame Home do Figma e
+     que a primeira implementação tinha capturado só como cor sólida (perdido
+     ao exportar pra PNG/SVG estático, que não preserva blur). */
+  --glass-blur: blur(20px) saturate(150%);
+  --glass-blur-sm: blur(14px) saturate(140%);
+
+  /* Superfície padrão (cards): gradiente diagonal de opacidade, não uma cor
+     lisa — o topo-esquerdo fica um pouco mais opaco/claro que o
+     fundo-direito, como um vidro real reflete mais luz de um lado. */
+  --glass-grad-card: linear-gradient(
+    155deg,
+    rgba(32, 41, 61, 0.62),
+    rgba(15, 20, 32, 0.4)
+  );
+  --glass-grad-card-hover: linear-gradient(
+    155deg,
+    rgba(40, 51, 75, 0.75),
+    rgba(19, 25, 40, 0.5)
+  );
+
+  /* Borda "cintilante" de 3 tons — mais clara no canto superior, esmaece no
+     meio e recupera um leve brilho azulado no canto inferior. Usada junto
+     com `border: 1px solid transparent` + double-background (padding-box /
+     border-box) nos componentes de vidro. */
+  --glass-grad-border: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.06) 45%,
+    rgba(194, 208, 255, 0.22) 100%
+  );
+  --glass-grad-border-hover: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.55),
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(194, 208, 255, 0.32) 100%
+  );
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  /* Botões de vidro (mesma família, tonalidade do fill "Iniciar um
+     projeto"/"Ver projetos" medido no Home.svg, só que com gradiente em vez
+     de cor lisa). */
+  --glass-grad-btn: linear-gradient(155deg, rgba(64, 79, 118, 0.5), rgba(40, 50, 75, 0.28));
+  --glass-grad-btn-hover: linear-gradient(155deg, rgba(74, 91, 134, 0.68), rgba(45, 56, 84, 0.4));
 }

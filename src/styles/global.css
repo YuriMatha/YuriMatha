@@ -157,14 +157,20 @@ p {
 }
 
 .btn-primary {
-  background: var(--cor-fundo-secundario);
+  /* Glassmorphism: vidro fosco sobre o vídeo do Hero, como no frame Home do
+     Figma — gradiente translúcido + blur do vídeo atrás + borda "cintilante"
+     de 3 tons (mais clara no canto superior), em vez de cor/borda lisas. */
+  background: var(--glass-grad-btn) padding-box, var(--glass-grad-border) border-box;
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   color: var(--cor-texto-primario);
-  border: 1px solid var(--cor-borda-media);
+  border: 1px solid transparent;
+  box-shadow: var(--glass-highlight);
 }
 
 .btn-primary:hover {
-  border-color: var(--cor-destaque-claro);
-  box-shadow: var(--shadow-focus);
+  background: var(--glass-grad-btn-hover) padding-box, var(--glass-grad-border-hover) border-box;
+  box-shadow: var(--glass-highlight), var(--shadow-focus);
 }
 
 .btn-secondary {
@@ -188,14 +194,21 @@ p {
 }
 
 .btn-ghost {
-  /* Medido em Home.svg: fill #344162 a 20% de opacidade sobre o fundo escuro
-     (nav CTA "Iniciar um projeto"). */
-  background: rgba(52, 65, 98, 0.2);
-  border: 1px solid var(--cor-borda-media);
+  /* Medido em Home.svg: fill #344162 sobre o fundo escuro (nav CTA "Iniciar
+     um projeto"). O SVG exportado só guarda a cor final visível — mas com o
+     header fixo ficando sobre o vídeo do Hero antes do scroll, esse fill
+     translúcido é o efeito de vidro fosco do Figma, não uma cor sólida
+     aproximada; sem o blur/gradiente, o botão só parecia "acinzentado" em
+     vez de vidro. */
+  background: var(--glass-grad-btn) padding-box, var(--glass-grad-border) border-box;
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid transparent;
   color: var(--cor-texto-primario);
+  box-shadow: var(--glass-highlight);
 }
 
 .btn-ghost:hover {
-  border-color: var(--cor-destaque-claro);
+  background: var(--glass-grad-btn-hover) padding-box, var(--glass-grad-border-hover) border-box;
   color: var(--cor-destaque-claro);
 }

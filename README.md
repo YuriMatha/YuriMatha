@@ -26,6 +26,35 @@ npm run preview   # serve a build de produção localmente
 - **Capas de projeto**: `Projetos/Capas/Capa - Gerenciador Mobile.png`,
   `Capa - Ti_Frete.png`, `Capa - Monitriip.png`, `Capa - Aplicativos.png`.
 
+## Correções recentes (pós-deploy) — rodada 5 (glassmorphism)
+
+O frame Home do Figma usa vidro fosco (glassmorphism) nos botões que ficam
+sobre o vídeo do Hero e nos cards de conteúdo — mas a primeira implementação
+mediu isso a partir do `Home.svg`/`Home.png` exportados, que só guardam a cor
+final visível de cada camada, sem preservar blur nem transparência real; o
+resultado saiu como cor sólida lisa em vez de vidro. Adicionado em
+`tokens.css` um conjunto de tokens de glassmorphism (`--glass-*`: blur,
+gradiente de fundo translúcido, borda "cintilante" de 3 tons, brilho no topo)
+e aplicado em:
+
+1. **Botões sobre mídia** (`.btn-primary` "Ver projetos", `.btn-ghost`
+   "Iniciar um projeto" no header) — fundo em gradiente translúcido +
+   `backdrop-filter: blur()` revelando o vídeo/conteúdo atrás, com borda em
+   gradiente (mais clara no canto superior) em vez de borda lisa.
+2. **Cards** (`.service-card`, `.contact-card`, `.contact__conversion-card`,
+   `.project-card`, `.projects__nav-btn`) — mesmo tratamento de vidro fosco.
+   Adicionada uma mancha de luz ambiente (`::before` com `radial-gradient`
+   azul) atrás da grade de cada seção (Serviços/Contato/Projetos), porque sem
+   algo colorido atrás pra revelar, o blur do vidro não tem efeito visível
+   sobre um fundo liso.
+3. **Card de conversão em Contato** — reforçado com um brilho radial branco
+   suave no canto superior (`::after`), no mesmo espírito do card "premium"
+   de destaque do design system de referência.
+
+`--cor-superficie-card`/`--cor-superficie-card-hover` (cor sólida antiga)
+ficaram sem uso nos componentes acima, mas os tokens continuam definidos em
+`tokens.css` caso algum componente futuro precise de uma superfície opaca.
+
 ## Correções recentes (pós-deploy) — rodada 4 (motion design)
 
 Passada de revisão completa das animações da página usando princípios de

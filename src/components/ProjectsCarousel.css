@@ -1,6 +1,30 @@
 .projects {
+  position: relative;
   background: var(--cor-fundo-primario);
   padding-block: var(--section-padding-y);
+  overflow: hidden;
+}
+
+/* Mancha de luz ambiente atrás do carrossel — mesmo recurso usado em
+   Serviços/Contato pra dar ao vidro fosco algo colorido pra revelar. */
+.projects::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 720px;
+  height: 480px;
+  max-width: 70vw;
+  background: radial-gradient(ellipse, rgba(69, 122, 255, 0.24), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.projects > .container,
+.projects__track {
+  position: relative;
+  z-index: 1;
 }
 
 .projects__intro-row {
@@ -38,9 +62,12 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--cor-superficie-card);
+  background: var(--glass-grad-card) padding-box, var(--glass-grad-border) border-box;
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   color: var(--cor-texto-secundario);
-  border: 1px solid var(--cor-borda-sutil);
+  border: 1px solid transparent;
+  box-shadow: var(--glass-highlight);
   transition: background var(--dur-fast), color var(--dur-fast), opacity var(--dur-fast);
 }
 
@@ -78,21 +105,27 @@
 }
 
 .project-card {
+  /* Glassmorphism, mesmo tratamento dos cards de Serviços/Contato. A capa da
+     imagem (project-card__media) fica opaca por cima — só a moldura/rodapé
+     de texto do card é vidro fosco de verdade. */
   flex: 0 0 auto;
   width: min(78vw, 380px);
   scroll-snap-align: start;
-  background: var(--cor-superficie-card);
-  border: 1px solid var(--cor-borda-sutil);
+  background: var(--glass-grad-card) padding-box, var(--glass-grad-border) border-box;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid transparent;
   border-radius: var(--radius-lg);
+  box-shadow: var(--glass-highlight);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform var(--dur-base) var(--ease-out-quart), border-color var(--dur-base);
+  transition: transform var(--dur-base) var(--ease-out-quart);
 }
 
 .project-card:hover {
   transform: translateY(-6px);
-  border-color: var(--cor-borda-media);
+  background: var(--glass-grad-card-hover) padding-box, var(--glass-grad-border-hover) border-box;
 }
 
 .project-card__media {

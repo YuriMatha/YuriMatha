@@ -1,6 +1,29 @@
 .services {
+  position: relative;
   background: var(--cor-fundo-primario);
   padding-block: var(--section-padding-y);
+  overflow: hidden;
+}
+
+/* Mancha de luz ambiente atrás da grade — sem ela o blur dos cards de vidro
+   não tem nada de colorido pra revelar por trás (fica só "escurecido"). */
+.services::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: 8%;
+  width: 620px;
+  height: 620px;
+  max-width: 60vw;
+  max-height: 60vw;
+  background: radial-gradient(circle, rgba(69, 122, 255, 0.32), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.services > .container {
+  position: relative;
+  z-index: 1;
 }
 
 .services__intro-row {
@@ -53,16 +76,21 @@
 }
 
 .service-card {
+  /* Glassmorphism: gradiente translúcido revelando a mancha de luz atrás
+     (.services::before) + borda "cintilante" de 3 tons, como no frame Home
+     do Figma. */
   padding: var(--space-6);
-  background: var(--cor-superficie-card);
-  border: 1px solid var(--cor-borda-sutil);
+  background: var(--glass-grad-card) padding-box, var(--glass-grad-border) border-box;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid transparent;
   border-radius: var(--radius-lg);
-  transition: border-color var(--dur-base) var(--ease-out-quart),
-    transform var(--dur-base) var(--ease-out-quart);
+  box-shadow: var(--glass-highlight);
+  transition: transform var(--dur-base) var(--ease-out-quart);
 }
 
 .service-card:hover {
-  border-color: var(--cor-borda-media);
+  background: var(--glass-grad-card-hover) padding-box, var(--glass-grad-border-hover) border-box;
   transform: translateY(-4px);
 }
 
