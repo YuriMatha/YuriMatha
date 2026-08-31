@@ -47,20 +47,12 @@
    recupera o enquadramento generoso do Figma nesses casos. */
 @media (min-aspect-ratio: 3/2) {
   .hero__portrait {
-    transform: scale(1.22);
+    /* Ajuste leve: 1.22 deixava o rosto grande demais, quase colado na tela
+       em telas bem largas. 1.1 ainda recupera o enquadramento do Figma sem
+       esse efeito de "câmera muito perto". */
+    transform: scale(1.1);
     transform-origin: 68% 30%;
   }
-}
-
-.hero__glow {
-  position: absolute;
-  top: -18%;
-  right: -6%;
-  width: 55%;
-  aspect-ratio: 1;
-  background: radial-gradient(circle, rgba(69, 122, 255, 0.55), transparent 70%);
-  filter: blur(10px);
-  mix-blend-mode: screen;
 }
 
 .hero__vignette {
@@ -85,23 +77,6 @@
   position: relative;
   z-index: 1;
   padding-top: var(--space-9);
-}
-
-/* Rótulo de intro desfocado — atmosférico, não é pra ser lido palavra por
-   palavra (por isso pointer-events/select desligados): dá profundidade antes
-   do headline "digitado" (typewriter) abaixo. Reaproveita o mesmo texto do
-   eyebrow anterior, só que quebrado em duas linhas, mais desfocado. */
-.hero__intro-blur {
-  pointer-events: none;
-  user-select: none;
-  margin-bottom: var(--space-5);
-  font-family: var(--font-mono);
-  font-size: clamp(0.8125rem, 0.7rem + 0.5vw, 1rem);
-  line-height: 1.4;
-  letter-spacing: var(--ls-mono);
-  text-transform: uppercase;
-  color: var(--cor-texto-primario);
-  filter: blur(3px);
 }
 
 .hero__headline {

@@ -4,7 +4,12 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { PROJETOS } from "../lib/content.js";
 import { IconArrowUpRight, IconChevronLeft, IconChevronRight } from "./icons.jsx";
+import ProjectImageModal from "./ProjectImageModal.jsx";
 import "./ProjectsCarousel.css";
+
+// Roda sozinho enquanto ninguém interage — pausa no hover/foco e enquanto o
+// lightbox 3D está aberto, pra não competir com quem está de fato navegando.
+const AUTOPLAY_INTERVAL_MS = 4500;
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,7 +34,9 @@ export default function ProjectsCarousel() {
   const root = useRef(null);
   const trackRef = useRef(null);
   const [active, setActive] = useState(0);
+  const [openProject, setOpenProject] = useState(null);
   const isJumping = useRef(false);
+  const autoplayHoverPaused = useRef(false);
 
   useGSAP(
     () => {
@@ -174,6 +181,48 @@ export default function ProjectsCarousel() {
     if (cards[N + i]) el.scrollTo({ left: cards[N + i].offsetLeft, behavior: "smooth" });
   };
 
+  // Formato "infinito" pedido: o carrossel avança sozinho, apoiado no mesmo
+  // mecanismo de loop por clonagem já usado no arrasto manual — nunca há um
+  // "fim" visível. Pausa no hover/foco (ninguém quer brigar com um carrossel
+  // pra ler um card) e enquanto o lightbox 3D está aberto; respeita
+  // prefers-reduced-motion não rodando sozinho pra quem pediu menos movimento.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const id = setInterval(() => {
+      if (!autoplayHoverPaused.current && !openProject) scrollByCard(1);
+    }, AUTOPLAY_INTERVAL_MS);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openProject]);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return undefined;
+    const pause = () => {
+      autoplayHoverPaused.current = true;
+    };
+    const resume = () => {
+      autoplayHoverPaused.current = false;
+    };
+    el.addEventListener("mouseenter", pause);
+    el.addEventListener("mouseleave", resume);
+    el.addEventListener("focusin", pause);
+    el.addEventListener("focusout", resume);
+    return () => {
+      el.removeEventListener("mouseenter", pause);
+      el.removeEventListener("mouseleave", resume);
+      el.removeEventListener("focusin", pause);
+      el.removeEventListener("focusout", resume);
+    };
+  }, []);
+
+  const openImageModal = (card) => {
+    setOpenProject({
+      ...card,
+      cover: coverFor(card.slug, "jpg"),
+    });
+  };
+
   return (
     <section id="projetos" className="projects" ref={root}>
       <div className="container">
@@ -212,8 +261,12 @@ export default function ProjectsCarousel() {
               <a
                 className="project-card__media"
                 href={`#projeto-${card.slug}`}
-                aria-label={`Ver detalhes do projeto ${card.nome}`}
+                aria-label={`Ver imagem do projeto ${card.nome} em destaque`}
                 tabIndex={isClone ? -1 : undefined}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (!isClone) openImageModal(card);
+                }}
               >
                 <picture>
                   <source srcSet={coverFor(card.slug, "webp")} type="image/webp" />
@@ -226,8 +279,12 @@ export default function ProjectsCarousel() {
                   <a
                     className="project-card__arrow"
                     href={`#projeto-${card.slug}`}
-                    aria-label={`Abrir projeto ${card.nome}`}
+                    aria-label={`Ver imagem do projeto ${card.nome} em destaque`}
                     tabIndex={isClone ? -1 : undefined}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (!isClone) openImageModal(card);
+                    }}
                   >
                     <IconArrowUpRight width={16} height={16} />
                   </a>
@@ -255,6 +312,8 @@ export default function ProjectsCarousel() {
           ))}
         </div>
       </div>
+
+      {openProject && <ProjectImageModal project={openProject} onClose={() => setOpenProject(null)} />}
     </section>
   );
 }

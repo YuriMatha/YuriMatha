@@ -8,7 +8,7 @@
 
 export const SITE = {
   nome: "Yuri Matha",
-  email: "pot@yurimatha.com.br",
+  email: "port@yurimatha.com.br",
   telefone: "+55 62 99440-2786",
   whatsappHref: "https://wa.me/5562994402786",
 };

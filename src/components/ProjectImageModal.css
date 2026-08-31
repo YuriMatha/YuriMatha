@@ -1,0 +1,79 @@
+.project-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  background: rgba(4, 8, 24, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.project-modal__close {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--glass-grad-card) padding-box, var(--glass-grad-border) border-box;
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid transparent;
+  color: var(--cor-texto-primario);
+  transition: color var(--dur-fast);
+}
+
+.project-modal__close:hover {
+  color: var(--cor-destaque-claro);
+}
+
+.project-modal__stage {
+  width: min(88vw, 860px);
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  /* Distância da câmera até o plano da imagem — controla o quanto o tilt
+     "afunda" a cena; valor moderado pra parecer 3D sem exagerar. */
+  perspective: 1200px;
+}
+
+.project-modal__image-wrap {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-elevated);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.project-modal__image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.project-modal__caption {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono-sm);
+  letter-spacing: var(--ls-mono);
+  text-transform: uppercase;
+  color: var(--cor-texto-secundario);
+}
+
+@media (hover: none) {
+  /* Sem cursor (touch): não existe "mousemove" pra inclinar a imagem — o
+     palco continua funcionando como visualização ampliada simples, plana. */
+  .project-modal__stage {
+    perspective: none;
+  }
+}

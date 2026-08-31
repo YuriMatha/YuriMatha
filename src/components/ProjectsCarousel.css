@@ -5,28 +5,6 @@
   overflow: hidden;
 }
 
-/* Mancha de luz ambiente atrás do carrossel — mesmo recurso usado em
-   Serviços/Contato pra dar ao vidro fosco algo colorido pra revelar. */
-.projects::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 720px;
-  height: 480px;
-  max-width: 70vw;
-  background: radial-gradient(ellipse, rgba(69, 122, 255, 0.1), transparent 78%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.projects > .container,
-.projects__track {
-  position: relative;
-  z-index: 1;
-}
-
 .projects__intro-row {
   display: flex;
   align-items: flex-end;
@@ -132,17 +110,28 @@
   display: block;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .project-card__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* transform-origin explícito: sem isso a escala às vezes ficava puxando
+     pra um dos cantos em vez de crescer a partir do centro, dando a
+     impressão de um "zoom" errado/deslocado ao passar o mouse. */
+  transform-origin: center center;
   transition: transform var(--dur-slow) var(--ease-out-quart);
+  will-change: transform;
 }
 
-.project-card:hover .project-card__media img {
-  transform: scale(1.05);
+/* Só aplica o zoom em dispositivos com hover de verdade (mouse/trackpad).
+   Em touch, ":hover" fica "grudado" no card do último toque — o card ficava
+   com zoom aplicado permanentemente até o usuário tocar em outro. */
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover .project-card__media img {
+    transform: scale(1.05);
+  }
 }
 
 .project-card__info {

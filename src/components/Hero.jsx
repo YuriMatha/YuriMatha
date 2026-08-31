@@ -3,25 +3,16 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { HERO, SITE } from "../lib/content.js";
 import { useTypewriter } from "../lib/useTypewriter.js";
-import { IconCopy } from "./icons.jsx";
-import heroPosterJpg from "../assets/images/hero-poster.jpg";
 import heroVideoMp4 from "../assets/video/hero-silhouette.mp4";
 import heroVideoWebm from "../assets/video/hero-silhouette.webm";
 import "./Hero.css";
 
 const HERO_ANIM_TARGETS = [".hero__subheadline", ".hero__portrait"];
 
-// Reaproveita literalmente um trecho já existente em HERO.subheadline
-// ("...UX/UI, Ux Writing e Ux Strategist."), em vez de inventar copy nova,
-// só quebrado em duas linhas pro rótulo desfocado acima do headline
-// "digitado". Ver Hero.css `.hero__intro-blur`.
-const INTRO_BLUR_LINES = ["Yuri Matha,", "UX/UI, Ux Writing e Ux Strategist"];
-
 export default function Hero() {
   const root = useRef(null);
   const videoRef = useRef(null);
   const [actionsVisible, setActionsVisible] = useState(false);
-  const [copied, setCopied] = useState(false);
   const { displayed: typedHeadline, done: typingDone } = useTypewriter(HERO.headline, {
     speed: 38,
     startDelay: 600,
@@ -140,20 +131,6 @@ export default function Hero() {
         // tween), never let the hero text stay invisible for real visitors.
         const safety = setTimeout(revealFinalState, 2500);
 
-        // Camada ambiente: o glow radial atrás da silhueta "respira" bem devagar
-        // e sutilmente (opacidade + escala) — sem isso a cena fica "chapada"
-        // (só a entrada, sem vida de fundo). Transform+opacity puros, custo de
-        // GPU desprezível, não reintroduz o problema de performance do vídeo.
-        gsap.to(".hero__glow", {
-          scale: 1.08,
-          opacity: 0.85,
-          duration: 5,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-          transformOrigin: "center center",
-        });
-
         return () => clearTimeout(safety);
       });
 
@@ -162,41 +139,17 @@ export default function Hero() {
     { scope: root }
   );
 
-  const handleCopyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(SITE.email);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      // Clipboard indisponível (ex.: permissão negada) — falha silenciosa; o
-      // e-mail já está visível no texto do próprio botão pra copiar na mão.
-    }
-  };
-
   return (
     <section id="inicio" className="hero" ref={root}>
       <div className="hero__bg" aria-hidden="true">
-        <video
-          ref={videoRef}
-          className="hero__portrait"
-          muted
-          playsInline
-          preload="auto"
-          poster={heroPosterJpg}
-        >
+        <video ref={videoRef} className="hero__portrait" muted playsInline preload="auto">
           <source src={heroVideoWebm} type="video/webm" />
           <source src={heroVideoMp4} type="video/mp4" />
         </video>
-        <div className="hero__glow" />
         <div className="hero__vignette" />
       </div>
 
       <div className="container hero__content" id="conteudo">
-        <p className="hero__intro-blur" aria-hidden="true">
-          {INTRO_BLUR_LINES[0]}
-          <br />
-          {INTRO_BLUR_LINES[1]}
-        </p>
         <h1 className="hero__headline">
           {typedHeadline}
           {!typingDone && <span className="hero__typewriter-cursor" aria-hidden="true" />}
@@ -216,10 +169,6 @@ export default function Hero() {
           <a href={SITE.whatsappHref} className="btn btn-secondary" target="_blank" rel="noreferrer">
             {HERO.ctaSecondary}
           </a>
-          <button type="button" className="btn btn-outline" onClick={handleCopyEmail}>
-            {copied ? "E-mail copiado!" : `Copiar: ${SITE.email}`}
-            <IconCopy width={12} height={12} />
-          </button>
         </div>
       </div>
 

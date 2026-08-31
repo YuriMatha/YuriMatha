@@ -1,8 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { CONTATO } from "../lib/content.js";
+import { CONTATO, SITE } from "../lib/content.js";
 import { IconArrowRight, IconCheck, IconMail, IconPhone } from "./icons.jsx";
 import "./Contact.css";
 
@@ -12,6 +12,22 @@ const ICONS = { email: IconMail, whatsapp: IconPhone };
 
 export default function Contact() {
   const root = useRef(null);
+  const [emailCopied, setEmailCopied] = useState(false);
+
+  // "Mandar e-mail" só com mailto: fica sem retorno nenhum se o visitante não
+  // tiver cliente de e-mail configurado (comum em quem usa só Gmail no
+  // navegador). Copia o endereço pro clipboard como reforço, sem atrapalhar
+  // o mailto: (não usa preventDefault, o link continua abrindo normalmente).
+  const handleEmailClick = async () => {
+    try {
+      await navigator.clipboard.writeText(SITE.email);
+      setEmailCopied(true);
+      setTimeout(() => setEmailCopied(false), 1800);
+    } catch {
+      // Clipboard indisponível — o mailto: já dispara normalmente, sem essa
+      // confirmação extra.
+    }
+  };
 
   useGSAP(
     () => {
@@ -79,9 +95,19 @@ export default function Contact() {
                     href={card.href}
                     target={card.tipo === "whatsapp" ? "_blank" : undefined}
                     rel={card.tipo === "whatsapp" ? "noreferrer" : undefined}
+                    onClick={card.tipo === "email" ? handleEmailClick : undefined}
                   >
-                    {card.acao}
-                    <IconArrowRight width={15} height={15} />
+                    {card.tipo === "email" && emailCopied ? (
+                      <>
+                        E-mail copiado!
+                        <IconCheck width={15} height={15} />
+                      </>
+                    ) : (
+                      <>
+                        {card.acao}
+                        <IconArrowRight width={15} height={15} />
+                      </>
+                    )}
                   </a>
                 </li>
               );

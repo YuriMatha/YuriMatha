@@ -26,6 +26,65 @@ npm run preview   # serve a build de produção localmente
 - Capas de projeto: `Projetos/Capas/Capa - Gerenciador Mobile.png`,
   `Capa - Ti_Frete.png`, `Capa - Monitriip.png`, `Capa - Aplicativos.png`.
 
+## Correções recentes (pós-deploy): rodada 8
+
+O usuário pediu pra tirar o botão de copiar e-mail e o rótulo desfocado da
+Hero, remover de vez qualquer glow do site (o brilho ambiente das seções
+estava marcando a divisão entre elas), trocar o e-mail de contato, dar alguma
+ação ao botão "Mandar e-mail", corrigir o zoom dos cards do carrossel e
+deixá-lo rodando sozinho em loop, abrir a imagem do projeto num visualizador
+3D que segue o mouse, e ajustar o enquadramento do vídeo da Hero pra não
+ficar tão perto da tela.
+
+1. Tirei o botão "Copiar: pot@yurimatha.com.br" e o rótulo desfocado
+   ("Yuri Matha, UX/UI, Ux Writing e Ux Strategist") de cima do headline
+   digitado. Também removi a camada de glow atrás da silhueta do vídeo: era
+   um brilho radial azul, animado, meio "respirando", que ficava por cima do
+   vídeo e dava a impressão de uma imagem extra ali. Agora só sobra o vídeo
+   em si, sem nenhuma camada por cima.
+2. O glow de fundo de Serviços, Contato e Projetos, que na rodada passada eu
+   só tinha suavizado, foi removido por completo: o usuário confirmou que
+   mesmo mais fraco ainda dava pra ver onde uma seção terminava e a outra
+   começava, então tirei as manchas de luz radiais inteiras (inclusive o
+   brilho branco no canto do card de conversão em Contato).
+3. Testei a Hero de novo com testes automatizados, sem emular "reduzir
+   movimento" dessa vez: o ícone de scroll renderiza centralizado e no fim da
+   seção (a mesma posição de sempre, `left: 50%` com `transform:
+   translateX(-50%)` e `bottom`), e a animação dele, junto com a máquina de
+   escrever do headline e o fade do vídeo/subtítulo, roda normalmente e sem
+   nenhum erro de JavaScript. Se ainda estiver diferente disso na sua tela,
+   vale um refresh forçado (Ctrl+Shift+R) pra descartar cache de uma versão
+   antiga dos arquivos.
+4. Ajustei o zoom do vídeo em telas bem largas: o `scale(1.22)` deixava o
+   rosto grande demais, quase colado na tela. Reduzi pra `scale(1.1)`, ainda
+   recuperando o enquadramento generoso do Figma sem esse efeito de câmera
+   perto demais.
+5. O e-mail de contato mudou de pot@yurimatha.com.br para
+   port@yurimatha.com.br. Como esse valor vem de um único lugar
+   (`SITE.email` em `content.js`), a troca já propaga pro card de contato e
+   pro link `mailto:`.
+6. O botão "Mandar e-mail" agora faz algo visível ao clicar: copia o
+   endereço pra área de transferência e troca o texto por "E-mail copiado!"
+   por um instante, além de continuar abrindo o cliente de e-mail padrão
+   normalmente. Isso cobre quem não tem um cliente de e-mail configurado no
+   computador.
+7. Corrigi o zoom dos cards do carrossel: a imagem cresce a partir do centro
+   (antes não tinha um `transform-origin` explícito) e o hover que aplica
+   esse zoom agora só roda em dispositivos com mouse de verdade
+   (`hover: hover`); em touch, o `:hover` ficava "grudado" no último card
+   tocado e o zoom nunca desligava.
+8. O carrossel agora roda sozinho em loop infinito, avançando um card a cada
+   4,5s pelo mesmo mecanismo de clonagem que já existia pro arrasto manual.
+   Ele pausa ao passar o mouse ou focar nos cards, e enquanto o visualizador
+   de imagem (item abaixo) está aberto, e respeita "reduzir movimento" (não
+   roda sozinho nesse caso).
+9. Clicar na imagem ou na seta de um projeto agora abre um visualizador em
+   tela cheia com efeito 3D: a capa inclina (rotaciona em X/Y) seguindo a
+   posição do cursor dentro do palco, com perspectiva e uma leve suavização
+   via GSAP (`quickTo`) pra não parecer que a imagem está "grudada" no
+   ponteiro. Entrada com escala e opacidade, fecha com Esc, clique fora ou
+   pelo botão no canto.
+
 ## Correções recentes (pós-deploy): rodada 7
 
 O usuário pediu para revisar o efeito da Hero que "não estava funcionando",

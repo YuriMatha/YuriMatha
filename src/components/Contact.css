@@ -5,22 +5,6 @@
   overflow: hidden;
 }
 
-/* Mancha de luz ambiente atrás dos cards de vidro (mesmo recurso usado em
-   Serviços) — dá ao blur do vidro fosco algo colorido pra revelar. */
-.contact::before {
-  content: "";
-  position: absolute;
-  top: 20%;
-  right: 4%;
-  width: 560px;
-  height: 560px;
-  max-width: 55vw;
-  max-height: 55vw;
-  background: radial-gradient(circle, rgba(69, 122, 255, 0.12), transparent 78%);
-  pointer-events: none;
-  z-index: 0;
-}
-
 .contact__watermark {
   position: absolute;
   top: 6%;
@@ -145,10 +129,8 @@
 
 .contact__conversion-card {
   /* Card de conversão — vidro fosco "premium" (destaque principal da seção):
-     mesmo gradiente + borda cintilante dos demais cards, mas reforçado com
-     um brilho radial branco suave no canto superior (como o GlassCard de
-     destaque do design system), revelando a mancha de luz atrás
-     (.contact::before). */
+     mesmo gradiente + borda cintilante dos demais cards, sem nenhum brilho
+     ambiente atrás (o usuário pediu para tirar todo "glow" do site). */
   position: relative;
   isolation: isolate;
   z-index: 1;
@@ -160,18 +142,6 @@
   padding: var(--space-7);
   box-shadow: var(--glass-highlight), var(--shadow-elevated);
   overflow: hidden;
-}
-
-.contact__conversion-card::after {
-  content: "";
-  position: absolute;
-  top: -30%;
-  right: -20%;
-  width: 260px;
-  height: 260px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 75%);
-  pointer-events: none;
-  z-index: -1;
 }
 
 .contact__conversion-badge-row {

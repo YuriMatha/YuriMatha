@@ -5,27 +5,6 @@
   overflow: hidden;
 }
 
-/* Mancha de luz ambiente atrás da grade — sem ela o blur dos cards de vidro
-   não tem nada de colorido pra revelar por trás (fica só "escurecido"). */
-.services::before {
-  content: "";
-  position: absolute;
-  top: -10%;
-  left: 8%;
-  width: 620px;
-  height: 620px;
-  max-width: 60vw;
-  max-height: 60vw;
-  background: radial-gradient(circle, rgba(69, 122, 255, 0.14), transparent 78%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.services > .container {
-  position: relative;
-  z-index: 1;
-}
-
 .services__intro-row {
   display: flex;
   align-items: flex-end;
