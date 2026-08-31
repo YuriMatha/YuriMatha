@@ -168,12 +168,13 @@ p {
 }
 
 .btn-secondary {
-  background: var(--neutro-branco);
+  background: var(--neutro-botao-claro);
   color: var(--azul-950);
+  border: 1px solid var(--neutro-botao-claro-borda);
 }
 
 .btn-secondary:hover {
-  background: var(--azul-50);
+  background: var(--neutro-branco);
 }
 
 .btn-accent {
@@ -187,6 +188,9 @@ p {
 }
 
 .btn-ghost {
+  /* Medido em Home.svg: fill #344162 a 20% de opacidade sobre o fundo escuro
+     (nav CTA "Iniciar um projeto"). */
+  background: rgba(52, 65, 98, 0.2);
   border: 1px solid var(--cor-borda-media);
   color: var(--cor-texto-primario);
 }

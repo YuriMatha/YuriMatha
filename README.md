@@ -53,6 +53,36 @@ npm run preview   # serve a build de produção localmente
    coincidência de pixel a pixel; vale um confere visual seu.
 3. **`package.json`**: removida a dependência `@fontsource/baloo-2` (não é
    mais usada).
+4. **Lag no Hero.** O vídeo de fundo (`hero-silhouette.mp4/webm`) tinha
+   `mask-image`/`-webkit-mask-image` aplicada continuamente sobre um vídeo em
+   reprodução (custo alto de composição/GPU), redundante com o
+   `.hero__vignette` (uma camada estática que já produz o mesmo esmaecimento
+   visual). Removi a máscara em `Hero.css`. Além disso, o vídeo original
+   estava em 1920x1080 com ~16s; recodifiquei para 1280x720 mantendo a
+   mesma taxa de quadros, reduzindo o arquivo de ~3MB+ para 537KB (mp4) /
+   420KB (webm) — menos dados pra decodificar por quadro.
+5. **Vídeo de fundo do Hero desenquadrado + travamento no loop.** O
+   `object-position` do vídeo (`.hero__portrait`) estava em `78% 30%`,
+   deslocando a silhueta bem mais para a direita do que no Figma; medindo o
+   enquadramento real do Figma (crop do Hero em `Figma/Home.png`) contra o
+   vídeo, corrigi para `63% 20%` (e o equivalente no breakpoint mobile).
+   Separadamente, o vídeo original (`Background_v.mp4`) não voltava ao
+   quadro inicial ao terminar — o `loop` do HTML criava um corte visível
+   ("travamento") a cada repetição. Recodifiquei como "boomerang" (o próprio
+   vídeo tocando pra frente e depois de trás pra frente, concatenados), o
+   que garante que o último quadro é idêntico ao primeiro — o loop agora é
+   perfeitamente contínuo.
+6. **Cores divergentes do Figma, principalmente nos botões.** Comparando os
+   tokens de cor (`tokens.css`) com o SVG exportado da página real do Figma
+   (`Home.svg`), nenhum dos hex documentados em `Cores/Paleta.png` aparece
+   no arquivo — ou seja, a paleta usada como referência original não bate
+   com o que está de fato no design. Medi as cores reais usadas (botão "Ver
+   projetos", botão "Ou chama no WhatsApp", CTA "Iniciar um projeto" no
+   header, fundo geral, e o indicador verde de "online" na seção de
+   Contato) diretamente do SVG/PNG e corrigi `tokens.css`, `global.css` e
+   `Contact.css` de acordo (detalhes de cada medição comentados no topo de
+   `tokens.css`). Vale copiar/atualizar `Cores/Paleta.png` a partir dessas
+   correções se quiser manter os dois em sincronia no futuro.
 
 ## Pontos em aberto (ainda sem alteração sua no repositório)
 

@@ -1,20 +1,31 @@
 /*
   Design tokens — YuriMatha Design System v1.0.0-beta
-  Fonte: Cores/Paleta.png (paleta oficial) + medidas extraídas do arquivo Figma
-  "Yuri Matha" (node Home, 17:264). Não alterar valores sem atualizar a fonte oficial.
+  Fonte original citada: Cores/Paleta.png. Porém, medindo diretamente as cores
+  reais usadas no arquivo Figma "Yuri Matha" (node Home, 17:264 — via Home.svg
+  e pixels de Home.png), várias delas não batem com o que está documentado em
+  Paleta.png (provavelmente uma versão anterior/aspiracional da paleta). Como
+  o Figma é a fonte da verdade para o site construído, os valores abaixo foram
+  corrigidos para o que está de fato no arquivo "Home":
+    --azul-950  media (10,16,26)=#0A101D no render vs. #000619 documentado
+    --azul-900  botão "Ver projetos" mede (52,64,95)≈#344162 vs. #000925 documentado
+    --azul-200  texto claro mede ≈#C3D3FF vs. #C2D0FF documentado (diferença pequena)
+  --azul-700/600/500 mantidos (sem uso direto de cor sólida encontrado no SVG
+  para contestar esses valores).
 */
 
 :root {
-  /* ---------- 1. Cores primitivas (paleta oficial) ---------- */
-  --azul-950: #000619; /* Navy Escuro Principal */
-  --azul-900: #000925; /* Navy Secundário */
+  /* ---------- 1. Cores primitivas ---------- */
+  --azul-950: #090e1a; /* Navy Escuro Principal — medido em Home.svg/png */
+  --azul-900: #344162; /* Superfície de botão/pill escura — medido em Home.svg/png */
   --azul-700: #003cff; /* Azul Saturado */
   --azul-600: #285bff; /* Azul Médio */
   --azul-500: #457aff; /* Azul Marca (principal) */
-  --azul-200: #c2d0ff; /* Azul Claro */
+  --azul-200: #c3d3ff; /* Azul Claro — medido em Home.svg/png */
   --azul-100: #dbe6ff; /* Azul Suave */
   --azul-50: #f6faff;  /* Branco Azulado */
   --neutro-branco: #ffffff;
+  --neutro-botao-claro: #f7f7fc; /* fundo do botão "Ou chama no WhatsApp", medido em Home.svg */
+  --neutro-botao-claro-borda: #c7ccdb; /* borda do mesmo botão */
 
   /* ---------- 2. Tokens semânticos (Cores/Paleta.png, seção 2) ---------- */
   --cor-fundo-primario: var(--azul-950);
