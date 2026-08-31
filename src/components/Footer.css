@@ -1,6 +1,5 @@
 .site-footer {
   background: var(--cor-fundo-primario);
-  border-top: 1px solid var(--cor-borda-sutil);
 }
 
 .site-footer__bar {

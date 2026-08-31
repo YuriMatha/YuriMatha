@@ -1,0 +1,25 @@
+# Yuri Matha
+
+> Portfólio de Yuri Matha: UX/UI Designer, UX Writer e UX Strategist brasileiro, com mais de 6 anos de experiência e formação em Análise e Desenvolvimento de Sistemas (ADS).
+
+Yuri lidera atualmente a experiência visual de uma das maiores empresas de venda de passagens de ônibus do Brasil, projetando soluções escaladas para milhões de usuários. Atua também como UX/UI Designer, UX Writer e UX Strategist para outros clientes, entregando desde a estratégia até o código de alta fidelidade.
+
+## Serviços
+
+- UX/UI Design, UX Writing e UX Strategy: mapeamento de jornada e escrita de interface antes do visual.
+- Design System no Figma componentizado, pronto pra handoff sem gerar dúvida de implementação.
+- Sites em WordPress editáveis pelo próprio cliente.
+
+## Projetos
+
+- Gerenciador Mobile: app de gestão com dashboard, menu de navegação e fluxos de formulários para operações mobile.
+- Ti – Frete: plataforma de cotação e gestão de fretes com listagens dinâmicas e formulários de cadastro.
+- Monitriip: app de monitoramento com dashboard de indicadores circulares e cards de navegação rápida.
+- Aplicativo de Passagens: design system e componentes reutilizáveis para o app de compra de passagens.
+
+## Contato
+
+- E-mail: port@yurimatha.com.br
+- WhatsApp: +55 62 99440-2786
+- LinkedIn: https://www.linkedin.com/in/yuri-matha/
+- Instagram: https://www.instagram.com/yuri_matha

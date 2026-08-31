@@ -32,6 +32,14 @@ export default function Hero() {
   // vídeo cairia parado no primeiro quadro pra sempre — nesse caso mantemos
   // o loop automático de antes (boomerang, sem travamento) em vez de deixar
   // a hero com uma imagem estática.
+  //
+  // Suavização (pedido explícito, efeito "mais suave"): a versão anterior
+  // perseguia o alvo com seeks discretos (seek -> espera "seeked" -> próximo
+  // seek), o que perto do disco/decodificador do navegador tende a "andar
+  // aos trancos" em vez de deslizar. Trocado por um loop de rAF que
+  // interpola o tempo atual na direção do alvo a cada frame (mesma ideia de
+  // um "lerp" de câmera) — o vídeo acompanha o mouse com uma sensação de
+  // peso/inércia, sem saltos.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return undefined;
@@ -44,30 +52,19 @@ export default function Hero() {
     }
 
     const SENSITIVITY = 0.8;
+    // Fração da distância até o alvo percorrida a cada frame — menor = mais
+    // suave/lento pra alcançar, maior = mais colado no mouse.
+    const EASE = 0.09;
     let duration = 0;
     let targetTime = 0;
-    let seeking = false;
+    let displayTime = 0;
     let prevX = null;
+    let rafId = null;
 
     const onLoadedMetadata = () => {
       duration = video.duration || 0;
       targetTime = video.currentTime;
-    };
-
-    const seekTo = (time) => {
-      if (seeking) return;
-      seeking = true;
-      video.currentTime = time;
-    };
-
-    const onSeeked = () => {
-      seeking = false;
-      // Se o alvo já mudou de novo enquanto o seek anterior ainda estava em
-      // andamento, dispara o próximo agora — evita "afogar" o vídeo com
-      // seeks simultâneos quando o mouse se move rápido.
-      if (Math.abs(targetTime - video.currentTime) > 0.01) {
-        seekTo(targetTime);
-      }
+      displayTime = video.currentTime;
     };
 
     const onMouseMove = (e) => {
@@ -80,18 +77,27 @@ export default function Hero() {
       prevX = e.clientX;
       const offset = (delta / window.innerWidth) * SENSITIVITY * duration;
       targetTime = Math.min(Math.max(targetTime + offset, 0), duration);
-      seekTo(targetTime);
+    };
+
+    const tick = () => {
+      if (duration) {
+        displayTime += (targetTime - displayTime) * EASE;
+        if (Math.abs(video.currentTime - displayTime) > 0.008) {
+          video.currentTime = displayTime;
+        }
+      }
+      rafId = requestAnimationFrame(tick);
     };
 
     video.addEventListener("loadedmetadata", onLoadedMetadata);
-    video.addEventListener("seeked", onSeeked);
     window.addEventListener("mousemove", onMouseMove);
     if (video.readyState >= 1) onLoadedMetadata();
+    rafId = requestAnimationFrame(tick);
 
     return () => {
       video.removeEventListener("loadedmetadata", onLoadedMetadata);
-      video.removeEventListener("seeked", onSeeked);
       window.removeEventListener("mousemove", onMouseMove);
+      cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -120,12 +126,17 @@ export default function Hero() {
           gsap.set(HERO_ANIM_TARGETS, { clearProps: "opacity,transform" });
         };
 
+        // Suavizado (pedido explícito): power3.out desacelera muito rápido
+        // perto do final, o que lê como um "freio brusco". power2.out chega
+        // no mesmo lugar com uma desaceleração mais gradual, e as durações
+        // um pouco mais longas (com menos deslocamento em Y) tiram a
+        // sensação de "chacoalhão" da entrada.
         const tl = gsap.timeline({
-          defaults: { ease: "power3.out" },
+          defaults: { ease: "power2.out" },
           onComplete: revealFinalState,
         });
-        tl.from(".hero__subheadline", { opacity: 0, y: 16, duration: 0.6 })
-          .from(".hero__portrait", { opacity: 0, scale: 1.04, duration: 1 }, "-=0.4");
+        tl.from(".hero__subheadline", { opacity: 0, y: 10, duration: 0.85 })
+          .from(".hero__portrait", { opacity: 0, scale: 1.03, duration: 1.4 }, "-=0.55");
 
         // Safety net: whatever happens (a stalled tab, a race on load, an interrupted
         // tween), never let the hero text stay invisible for real visitors.
