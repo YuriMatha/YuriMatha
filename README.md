@@ -26,6 +26,140 @@ npm run preview   # serve a build de produção localmente
 - Capas de projeto: `Projetos/Capas/Capa - Gerenciador Mobile.png`,
   `Capa - Ti_Frete.png`, `Capa - Monitriip.png`, `Capa - Aplicativos.png`.
 
+## Correções recentes (pós-deploy): rodada 11
+
+O usuário reportou que o "erro" na Hero continuava, apontando o ícone de
+scroll como suspeito, e que o vídeo (já rodando certo depois da rodada
+anterior) parecia ter uma imagem atrás, vinda do "background" — pediu pra
+tirar essa camada e deixar só o vídeo, além de conferir se o texto da Hero
+está no grid certo.
+
+1. O ícone de scroll ficava completamente escondido (`display: none`) abaixo
+   de 700px de largura — em qualquer tela menor que isso ele simplesmente
+   não existia, o que lia como um bug. Removi essa condição: agora ele
+   aparece sempre, embaixo e centralizado (`left: 50%` + `translateX(-50%)`,
+   que centraliza contra a própria seção da Hero, então vale pra qualquer
+   largura). No mobile ele fica um pouco menor e mais perto da borda de
+   baixo, com folga garantida em relação aos botões "Ver projetos"/"Ou
+   chama no WhatsApp" acima dele.
+2. Sobre a "imagem atrás do vídeo": a `.hero` tinha um `background` próprio
+   (um gradiente radial azul vibrante) por baixo do vídeo. Como o vídeo tem
+   `opacity: 0.92` (não 100%), esses 8% restantes deixavam esse gradiente
+   vazar por trás da silhueta, dando a impressão de uma segunda camada de
+   imagem ali (dava pra ver bem no canto superior direito, uma auréola azul
+   clara que não muda com o vídeo). Troquei esse gradiente por uma cor
+   sólida no mesmo tom escuro do vídeo: agora não sobra nenhum vazamento
+   por trás. Vale registrar: extraí quadros do próprio arquivo de vídeo
+   (`hero-silhouette.mp4`) pra confirmar, e o tom azulado ao redor da
+   silhueta que ainda aparece faz parte do vídeo em si (é a iluminação de
+   fundo gravada), não uma camada separada em CSS — não dá pra "remover"
+   isso sem trocar o vídeo.
+3. Aproveitei pra deixar o autoplay do vídeo mais à prova de falhas: o
+   atributo `muted` do React às vezes não é aplicado a tempo do navegador
+   decidir se libera o autoplay (um bug conhecido do React com `<video>`),
+   e sem isso o vídeo trava mudo no primeiro quadro, parecendo uma imagem
+   parada em vez de vídeo rodando. Agora `Hero.jsx` também seta
+   `video.muted = true` direto na propriedade antes de chamar `.play()`,
+   garantindo que o navegador sempre veja o vídeo como mudo a tempo.
+4. Conferi o alinhamento do texto da Hero contra a logo do header com um
+   script automatizado, em três larguras (390px, 1440px e 1920px): a borda
+   esquerda do headline bate exatamente com a borda esquerda do "YURI
+   MATHA" nas três, então o grid já está correto no código atual. Se ainda
+   estiver diferente na sua tela, é bem provável que seja cache do navegador
+   ou uma versão anterior ainda publicada no Hostinger (o mesmo tipo de
+   situação da rodada 9) — vale um Ctrl+Shift+R antes de mais nada.
+5. Conferi também o menu mobile aberto e o rodapé no celular: não encontrei
+   nenhum desalinhamento além do que já foi corrigido nesta e na rodada
+   anterior (o "CONTATO" da seção de Contato).
+6. Sobre a lista de segurança pedida: o site é 100% estático (React + Vite,
+   sem backend, sem banco de dados, sem login), então boa parte da lista não
+   se aplica de verdade aqui: RLS, autenticação server-side, hash de senha,
+   rate limit, bloqueio de mass assignment, queries parametrizadas e
+   proteção de cookies de sessão são coisas de um sistema com servidor e
+   banco por trás, que este projeto não tem. Rodei `npm audit` (nenhuma
+   vulnerabilidade nas dependências) e uma busca por padrões de chave/senha
+   no código (nenhuma encontrada — não existe nenhum `.env` ou chave de API
+   no projeto). O que de fato se aplica pra um site estático eu apliquei:
+   adicionei `public/.htaccess` com cabeçalhos de segurança (`X-Content-
+   Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-
+   Policy`) e uma regra de redirecionamento pra HTTPS (redundante se você já
+   tiver o SSL forçado no painel da Hostinger, mas não atrapalha), e
+   endureci o `.gitignore` pra ignorar qualquer `.env` que venha a existir
+   no futuro.
+
+## Correções recentes (pós-deploy): rodada 10
+
+O usuário pediu pra ajustar o efeito de mouse do vídeo da Hero (ou deixá-lo
+só rodando, se não desse pra deixar 100% confiável), corrigir o glow que
+faltava nos cards do carrossel, o zoom que cortava o card na seção e as
+imagens de projeto que às vezes não abriam, e o "CONTATO" que passava da
+largura da tela no Contato.
+
+1. O vídeo da Hero era controlado pelo movimento do mouse ("scrub", buscando
+   um frame específico conforme a posição do cursor), mas esse efeito se
+   mostrou inconsistente entre navegadores/máquinas em várias rodadas
+   anteriores. Como o próprio usuário topou essa troca caso não desse pra
+   deixar 100% funcional, simplifiquei pra um autoplay em loop simples
+   (`video.loop = true` + `video.play()`), mais simples e consistente em
+   qualquer navegador.
+2. Corrigi o bug de "algumas imagens não abrem" no carrossel: o carrossel
+   infinito usa três cópias do mesmo conjunto de cards pra criar o loop
+   (cópia, real, cópia), e o clique pra abrir o visualizador de imagem
+   estava desabilitado nas cópias (`isClone`) por acidente — como o
+   autoplay frequentemente deixa uma cópia em foco, clicar nela não fazia
+   nada. Como toda cópia mostra exatamente o mesmo projeto que o bloco
+   real, agora o clique abre o modal em qualquer uma delas.
+3. O zoom do card ficava cortado na borda da seção porque dois problemas de
+   CSS se somavam: o próprio `.project-card` tinha `overflow: hidden`, o que
+   corta o próprio `box-shadow` do elemento (por isso o glow do hover nunca
+   aparecia); e a faixa de scroll (`.projects__track`) tinha `overflow-x:
+   auto` sem `overflow-y` explícito, o que pela especificação do CSS força o
+   eixo vertical a virar `auto` também, cortando o "levantar" do card
+   (`translateY`) bem na borda da faixa. Tirei o `overflow: hidden` do card
+   (o corte arredondado da imagem passou pro `.project-card__media`, que já
+   tinha esse overflow) e dei um respiro vertical (`padding-block`) na
+   faixa de scroll pra caber a animação de hover sem cortar.
+4. Com esses dois ajustes, adicionei o glow de hover que faltava: um brilho
+   azulado contido no próprio card, que aparece só em dispositivos com mouse
+   de verdade e some junto com o card ao tirar o cursor — diferente do glow
+   ambiente de fundo das seções, que foi removido de vez na rodada 8 e
+   continua fora.
+5. O "CONTATO" no fundo da seção de Contato: o ajuste da rodada anterior
+   (um clamp de tamanho de fonte "no olho") ainda estava errado, como o
+   usuário reportou. Dessa vez medi a largura real do texto renderizado
+   (a fonte Briller é bem mais larga por caractere do que parece) em vez de
+   estimar, e recalculei o clamp pra manter a palavra em ~74% da largura da
+   tela em qualquer tamanho, com folga real dos dois lados.
+
+## Correções recentes (pós-deploy): rodada 9
+
+O usuário reportou que o botão de copiar e-mail e o rótulo desfocado da Hero
+ainda apareciam, que o efeito da Hero precisava ficar mais suave, e que
+ainda dava pra ver uma linha marcando a divisão entre seções. Pediu também
+um ajuste de SEO/GEO/AEO pra ajudar no posicionamento.
+
+1. Conferi o código do botão de copiar e-mail e do rótulo desfocado: ambos
+   já tinham sido removidos corretamente na rodada 8 (arquivo, tamanho e
+   render local batem). A explicação mais provável pra continuar aparecendo
+   é cache do navegador ou uma versão anterior ainda publicada no Hostinger
+   — nenhuma mudança de código adicional foi necessária aqui.
+2. A "linha de divisão entre seções" não era mais o glow (já removido): era
+   uma borda (`border-top`) de 1px no rodapé (`.site-footer`), sutil mas
+   visível entre a seção de Contato e o rodapé. Removida.
+3. Suavizei a entrada da Hero: a curva `power3.out` desacelera bem rápido
+   perto do final, o que lê como um freio brusco. Troquei para `power2.out`,
+   com durações um pouco mais longas e menos deslocamento vertical, o que
+   tira a sensação de "chacoalhão" na entrada do subtítulo e do vídeo.
+4. SEO/GEO/AEO: adicionei `robots.txt` e `sitemap.xml` (indexação
+   tradicional), `llms.txt` (contexto direto pra buscadores baseados em IA
+   resumirem o portfólio sem precisar interpretar o HTML todo) e completei
+   o JSON-LD do `index.html` com telefone, ponto de contato, ocupação e uma
+   lista estruturada dos quatro projetos. Também corrigi o e-mail
+   desatualizado (pot@ para port@) que ainda estava no JSON-LD. Gerei
+   `og-cover.jpg` (1200x630, recortado do frame do vídeo da Hero) e
+   `perfil-yuri-matha.jpg` (800x800) pra completar as imagens de
+   compartilhamento que o `index.html` já referenciava.
+
 ## Correções recentes (pós-deploy): rodada 8
 
 O usuário pediu pra tirar o botão de copiar e-mail e o rótulo desfocado da

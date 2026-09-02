@@ -26,79 +26,27 @@ export default function Hero() {
     return () => clearTimeout(id);
   }, []);
 
-  // Vídeo controlado pelo movimento horizontal do mouse ("scrub"): a posição
-  // do vídeo acompanha o gesto do cursor em vez de tocar sozinho. Em telas
-  // sem mouse (touch), não existe "mousemove" pra controlar nada, então o
-  // vídeo cairia parado no primeiro quadro pra sempre — nesse caso mantemos
-  // o loop automático de antes (boomerang, sem travamento) em vez de deixar
-  // a hero com uma imagem estática.
-  //
-  // Suavização (pedido explícito, efeito "mais suave"): a versão anterior
-  // perseguia o alvo com seeks discretos (seek -> espera "seeked" -> próximo
-  // seek), o que perto do disco/decodificador do navegador tende a "andar
-  // aos trancos" em vez de deslizar. Trocado por um loop de rAF que
-  // interpola o tempo atual na direção do alvo a cada frame (mesma ideia de
-  // um "lerp" de câmera) — o vídeo acompanha o mouse com uma sensação de
-  // peso/inércia, sem saltos.
+  // O vídeo antes era controlado pelo movimento do mouse ("scrub"), mas esse
+  // efeito se mostrou inconsistente entre máquinas/navegadores em várias
+  // rodadas de ajuste (dependia de currentTime/seek se comportar igual em
+  // todo lugar, o que não é garantido). Pedido explícito do usuário: se não
+  // der pra deixar 100%, é preferível o vídeo simplesmente rodando sozinho
+  // (autoplay em loop) a manter um efeito quebrado. Mais simples, e
+  // consistente em qualquer navegador/dispositivo.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return undefined;
-
-    const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    if (!supportsHover) {
-      video.loop = true;
-      video.play().catch(() => {});
-      return undefined;
-    }
-
-    const SENSITIVITY = 0.8;
-    // Fração da distância até o alvo percorrida a cada frame — menor = mais
-    // suave/lento pra alcançar, maior = mais colado no mouse.
-    const EASE = 0.09;
-    let duration = 0;
-    let targetTime = 0;
-    let displayTime = 0;
-    let prevX = null;
-    let rafId = null;
-
-    const onLoadedMetadata = () => {
-      duration = video.duration || 0;
-      targetTime = video.currentTime;
-      displayTime = video.currentTime;
-    };
-
-    const onMouseMove = (e) => {
-      if (!duration) return;
-      if (prevX === null) {
-        prevX = e.clientX;
-        return;
-      }
-      const delta = e.clientX - prevX;
-      prevX = e.clientX;
-      const offset = (delta / window.innerWidth) * SENSITIVITY * duration;
-      targetTime = Math.min(Math.max(targetTime + offset, 0), duration);
-    };
-
-    const tick = () => {
-      if (duration) {
-        displayTime += (targetTime - displayTime) * EASE;
-        if (Math.abs(video.currentTime - displayTime) > 0.008) {
-          video.currentTime = displayTime;
-        }
-      }
-      rafId = requestAnimationFrame(tick);
-    };
-
-    video.addEventListener("loadedmetadata", onLoadedMetadata);
-    window.addEventListener("mousemove", onMouseMove);
-    if (video.readyState >= 1) onLoadedMetadata();
-    rafId = requestAnimationFrame(tick);
-
-    return () => {
-      video.removeEventListener("loadedmetadata", onLoadedMetadata);
-      window.removeEventListener("mousemove", onMouseMove);
-      cancelAnimationFrame(rafId);
-    };
+    // "muted" via atributo JSX às vezes não é aplicado na propriedade real do
+    // elemento a tempo do navegador decidir se libera o autoplay (bug
+    // conhecido do React com <video>) — sem isso, o autoplay é bloqueado
+    // silenciosamente e o vídeo trava no primeiro frame, parecendo uma
+    // imagem estática parada em vez de um vídeo rodando. Setar aqui, direto
+    // na propriedade, antes do play(), garante que o navegador sempre veja o
+    // vídeo como mudo a tempo.
+    video.muted = true;
+    video.loop = true;
+    video.play().catch(() => {});
+    return undefined;
   }, []);
 
   useGSAP(

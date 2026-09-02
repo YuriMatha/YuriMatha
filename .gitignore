@@ -1,3 +1,10 @@
 node_modules
 dist
 .DS_Store
+
+# O projeto não usa nenhuma variável de ambiente/chave hoje (é um site
+# estático, sem backend), mas isso evita que um .env criado no futuro vá
+# parar no repositório por engano.
+.env
+.env.*
+!.env.example

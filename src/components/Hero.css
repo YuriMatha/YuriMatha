@@ -11,7 +11,14 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: radial-gradient(120% 100% at 78% 8%, #2c4694 0%, #0a1330 42%, var(--azul-950) 78%);
+  /* Antes era um radial-gradient azul vibrante. O vídeo por cima tem
+     opacity:0.92 (não 100%), então esse gradiente ficava "vazando" nos 8%
+     restantes por trás dele — dava pra ver claramente uma segunda camada
+     azul brilhante atrás da silhueta, como se fosse uma imagem de fundo
+     separada do vídeo (exatamente o que foi reportado). Cor sólida no tom
+     mais escuro do vídeo elimina esse vazamento: sem vídeo carregado ainda
+     ela também serve de fallback discreto, sem nenhum "brilho" extra. */
+  background: var(--azul-950);
   isolation: isolate;
 }
 
@@ -149,6 +156,12 @@
 }
 
 .hero__scroll-cue {
+  /* Antes ficava escondido (display:none) abaixo de 700px — em qualquer tela
+     menor que isso o ícone simplesmente não existia, o que lia como "sumiu"
+     ou "está errado". Pedido explícito do usuário: deixá-lo sempre visível,
+     embaixo e centralizado, em qualquer tamanho de tela. left:50% +
+     translateX(-50%) já centraliza horizontalmente contra o próprio .hero
+     (não contra o texto), então isso vale em qualquer largura. */
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -158,13 +171,6 @@
   height: 42px;
   border: 1.5px solid var(--cor-borda-media);
   border-radius: var(--radius-pill);
-  display: none;
-}
-
-@media (min-width: 700px) {
-  .hero__scroll-cue {
-    display: block;
-  }
 }
 
 /* Camada ambiente: o contorno da pill "respira" bem devagar (opacidade),
@@ -225,5 +231,18 @@
   }
   .hero__headline {
     max-width: 100%;
+  }
+  /* Um pouco menor e mais perto da borda: no mobile o conteúdo (texto +
+     botões) já ocupa quase até o fim da seção (align-items:flex-end acima),
+     então a folga entre o fim dos botões e o ícone de scroll é menor —
+     aproximar o ícone da borda de baixo garante que ele nunca fique colado
+     ou sobreposto ao botão "Ou chama direto no WhatsApp". */
+  .hero__scroll-cue {
+    width: 22px;
+    height: 34px;
+    bottom: var(--space-5);
+  }
+  .hero__scroll-cue span {
+    height: 6px;
   }
 }

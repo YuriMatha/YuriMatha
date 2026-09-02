@@ -67,7 +67,15 @@
 .projects__track {
   display: flex;
   gap: var(--space-6);
-  margin-top: var(--space-8);
+  /* padding-block reserva espaço pro card "levantar" (translateY) e pro glow
+     do hover, sem cortar: como overflow-x já é diferente de "visible" aqui,
+     a especificação de CSS obriga overflow-y a virar "auto" também (não dá
+     pra deixar só um eixo com overflow visível) — sem essa folga o hover
+     ficava cortado bem na borda da faixa de scroll, "colado" na seção. O
+     margin-top desconta o padding de cima pra manter a mesma distância
+     visual do título até o topo dos cards. */
+  margin-top: calc(var(--space-8) - 24px);
+  padding-block: 24px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -95,21 +103,32 @@
   border: 1px solid transparent;
   border-radius: var(--radius-lg);
   box-shadow: var(--glass-highlight);
-  overflow: hidden;
+  /* Sem overflow:hidden aqui (antes tinha): "overflow" corta o próprio
+     box-shadow do elemento, então o glow do hover abaixo nunca apareceria.
+     O corte da imagem nos cantos arredondados agora é feito só no
+     .project-card__media (que tem o mesmo raio nos cantos de cima). */
   display: flex;
   flex-direction: column;
-  transition: transform var(--dur-base) var(--ease-out-quart);
+  transition: transform var(--dur-base) var(--ease-out-quart), box-shadow var(--dur-base) var(--ease-out-quart);
 }
 
-.project-card:hover {
-  transform: translateY(-6px);
-  background: var(--glass-grad-card-hover) padding-box, var(--glass-grad-border-hover) border-box;
+/* Glow contido no próprio card (pedido explícito) — diferente do brilho
+   ambiente de fundo das seções, que foi removido por completo. Esse é local,
+   some junto com o card ao tirar o mouse, então não cria nenhuma "divisão"
+   entre seções. */
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover {
+    transform: translateY(-6px);
+    background: var(--glass-grad-card-hover) padding-box, var(--glass-grad-border-hover) border-box;
+    box-shadow: var(--glass-highlight), 0 16px 40px -12px rgba(69, 122, 255, 0.45);
+  }
 }
 
 .project-card__media {
   display: block;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   cursor: pointer;
 }
 

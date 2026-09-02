@@ -265,7 +265,11 @@ export default function ProjectsCarousel() {
                 tabIndex={isClone ? -1 : undefined}
                 onClick={(e) => {
                   e.preventDefault();
-                  if (!isClone) openImageModal(card);
+                  // As cópias do loop mostram o mesmo projeto que o bloco
+                  // real (mesmo "card"/slug) — abrir o modal sempre, mesmo
+                  // clicando numa cópia, corrige o bug de "algumas imagens
+                  // não abrem" quando o autoplay deixa uma cópia em foco.
+                  openImageModal(card);
                 }}
               >
                 <picture>
@@ -283,7 +287,7 @@ export default function ProjectsCarousel() {
                     tabIndex={isClone ? -1 : undefined}
                     onClick={(e) => {
                       e.preventDefault();
-                      if (!isClone) openImageModal(card);
+                      openImageModal(card);
                     }}
                   >
                     <IconArrowUpRight width={16} height={16} />

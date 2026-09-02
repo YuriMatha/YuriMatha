@@ -1,0 +1,32 @@
+# Cabeçalhos de segurança para hospedagem estática (Apache/LiteSpeed,
+# como na Hostinger). O site não tem backend, banco de dados, login ou
+# API própria, então a maior parte de uma checklist de segurança comum
+# (RLS, hash de senha, rate limit, autenticação server-side, etc.) não se
+# aplica aqui — isso protege a parte que de fato existe: como o navegador
+# de quem visita trata os arquivos estáticos que o servidor entrega.
+<IfModule mod_headers.c>
+  # Impede que o navegador "adivinhe" um tipo de arquivo diferente do
+  # Content-Type real declarado pelo servidor.
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Bloqueia o site de ser aberto dentro de um <iframe> em outro domínio
+  # (clickjacking).
+  Header always set X-Frame-Options "DENY"
+
+  # Manda menos informação de referência (a URL completa de onde veio o
+  # clique) para outros sites ao seguir um link.
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Desliga por padrão o acesso a APIs de câmera/microfone/geolocalização,
+  # que este site não usa.
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# Força HTTPS. A Hostinger normalmente já provisiona certificado SSL e
+# oferece essa opção no painel (Sites -> SSL) — se já estiver ativada por
+# lá, essa regra é redundante (não faz mal, só nunca chega a rodar).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
